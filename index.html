@@ -23,21 +23,79 @@
             position: relative;
             overflow-x: hidden;
         }
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.1) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(99,102,241,0.08) 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, rgba(236,72,153,0.05) 0%, transparent 50%);
+            animation: bgPulse 6s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+        @keyframes bgPulse {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.05); }
+        }
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(180,130,255,0.2);
+            animation: floatUp linear infinite;
+            box-shadow: 0 0 15px rgba(180,130,255,0.1);
+        }
+        .particle:nth-child(1) { width: 6px; height: 6px; left: 8%; animation-duration: 18s; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 4px; height: 4px; left: 18%; animation-duration: 14s; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 8px; height: 8px; left: 30%; animation-duration: 22s; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; left: 45%; animation-duration: 16s; animation-delay: 1s; }
+        .particle:nth-child(5) { width: 7px; height: 7px; left: 58%; animation-duration: 20s; animation-delay: 3s; }
+        .particle:nth-child(6) { width: 4px; height: 4px; left: 70%; animation-duration: 13s; animation-delay: 5s; }
+        .particle:nth-child(7) { width: 9px; height: 9px; left: 82%; animation-duration: 24s; animation-delay: 2s; }
+        .particle:nth-child(8) { width: 5px; height: 5px; left: 92%; animation-duration: 17s; animation-delay: 6s; }
+        .particle:nth-child(9) { width: 6px; height: 6px; left: 25%; animation-duration: 19s; animation-delay: 7s; }
+        .particle:nth-child(10) { width: 4px; height: 4px; left: 65%; animation-duration: 15s; animation-delay: 4s; }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
         .container {
             width: 100%;
             max-width: 540px;
             position: relative;
             z-index: 1;
+            animation: containerIn 0.8s ease-out;
+        }
+        @keyframes containerIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         .glass-card {
-            background: rgba(18, 16, 40, 0.55);
+            background: rgba(18,16,40,0.55);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border-radius: 40px;
             padding: 28px 22px 24px;
-            border: 1px solid rgba(200, 160, 255, 0.12);
-            box-shadow: 0 20px 70px rgba(0,0,0,0.6);
+            border: 1px solid rgba(200,160,255,0.12);
+            box-shadow: 0 20px 70px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
             animation: cardIn 0.6s ease-out;
+        }
+        .glass-card:hover {
+            border-color: rgba(200,160,255,0.2);
+            box-shadow: 0 25px 80px rgba(0,0,0,0.7), 0 0 60px rgba(180,130,255,0.04);
+            transform: translateY(-2px);
         }
         @keyframes cardIn {
             from { opacity: 0; transform: translateY(30px) scale(0.97); }
@@ -49,40 +107,37 @@
             align-items: center;
             padding-bottom: 18px;
             margin-bottom: 18px;
-            border-bottom: 1px solid rgba(200, 160, 255, 0.06);
+            border-bottom: 1px solid rgba(200,160,255,0.06);
         }
         .logo-text {
             color: #fff;
             font-size: 24px;
             font-weight: 700;
+            animation: titleGlow 3s ease-in-out infinite;
         }
-        .logo-text span {
-            color: #c4b5fd;
+        @keyframes titleGlow {
+            0%,100% { text-shadow: 0 0 2px rgba(255,255,255,0.2); }
+            50% { text-shadow: 0 0 15px rgba(180,130,255,0.3); }
         }
-        .title-section {
-            text-align: center;
-            margin-bottom: 22px;
-        }
-        .title-section h1 {
-            color: #fff;
-            font-size: 26px;
-            font-weight: 700;
-        }
-        .title-section .sub {
-            color: #a78bfa;
-            font-size: 14px;
-            margin-top: 4px;
+        .logo-text span { color: #c4b5fd; }
+        .title-section { text-align: center; margin-bottom: 22px; }
+        .title-section h1 { color: #fff; font-size: 26px; font-weight: 700; animation: fadeIn 0.5s ease-out; }
+        .title-section .sub { color: #a78bfa; font-size: 14px; margin-top: 4px; animation: fadeIn 0.7s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .input-label {
             color: #b0a0d0;
             font-size: 14px;
             margin-bottom: 8px;
+            animation: fadeIn 0.8s ease-out;
         }
         textarea {
             width: 100%;
             min-height: 120px;
-            background: rgba(10, 8, 28, 0.6);
-            border: 1px solid rgba(180, 130, 255, 0.12);
+            background: rgba(10,8,28,0.6);
+            border: 1px solid rgba(180,130,255,0.12);
             border-radius: 24px;
             color: #f0ecff;
             font-size: 16px;
@@ -91,10 +146,14 @@
             outline: none;
             line-height: 1.8;
             direction: rtl;
+            transition: all 0.3s ease;
+            animation: fadeIn 0.9s ease-out;
         }
         textarea:focus {
-            border-color: rgba(180, 130, 255, 0.3);
-            background: rgba(10, 8, 28, 0.8);
+            border-color: rgba(180,130,255,0.3);
+            background: rgba(10,8,28,0.8);
+            box-shadow: 0 0 40px rgba(180,130,255,0.04), inset 0 0 40px rgba(180,130,255,0.02);
+            transform: scale(1.005);
         }
         textarea::placeholder {
             color: #4a4a6a;
@@ -103,28 +162,38 @@
         }
         .result-box {
             margin-top: 18px;
-            background: rgba(10, 8, 28, 0.4);
+            background: rgba(10,8,28,0.4);
             border-radius: 24px;
             padding: 16px 20px;
-            border: 1px solid rgba(180, 130, 255, 0.06);
+            border: 1px solid rgba(180,130,255,0.06);
             cursor: pointer;
             min-height: 60px;
+            transition: all 0.25s ease;
+            animation: resultIn 0.4s ease-out;
         }
-        .result-box:active {
-            transform: scale(0.97);
+        .result-box:hover {
+            border-color: rgba(180,130,255,0.12);
+            background: rgba(10,8,28,0.6);
+        }
+        .result-box:active { transform: scale(0.97); }
+        @keyframes resultIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .result-header {
             display: flex;
             justify-content: space-between;
             margin-bottom: 6px;
         }
-        .result-header .label {
-            color: #a090c0;
-            font-size: 13px;
-        }
+        .result-header .label { color: #a090c0; font-size: 13px; }
         .result-header .hint {
             color: #6a6a8a;
             font-size: 11px;
+            animation: hintPulse 2s ease-in-out infinite;
+        }
+        @keyframes hintPulse {
+            0%,100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
         .result-content {
             color: #f0ecff;
@@ -134,13 +203,17 @@
             word-wrap: break-word;
             direction: ltr;
             text-align: left;
+            transition: all 0.2s ease;
         }
-        .result-content.empty {
-            color: #4a4a6a;
-            font-style: italic;
-        }
+        .result-content.empty { color: #4a4a6a; font-style: italic; }
         .result-content.error {
             color: #f8a0a0;
+            animation: shake 0.4s ease-out;
+        }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
         .toast {
             position: fixed;
@@ -159,13 +232,13 @@
             box-shadow: 0 12px 50px rgba(0,0,0,0.5);
         }
         @keyframes toastAnim {
-            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            12% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px) scale(0.95); }
+            12% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
             88% { opacity: 1; }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-10px); visibility: hidden; }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.95); visibility: hidden; }
         }
-        .toast-success { background: rgba(120, 180, 255, 0.85); color: #fff; }
-        .toast-error { background: rgba(255, 120, 120, 0.85); color: #fff; }
+        .toast-success { background: rgba(120,180,255,0.85); color: #fff; }
+        .toast-error { background: rgba(255,120,120,0.85); color: #fff; }
         @media (max-width: 480px) {
             .glass-card { padding: 20px 16px 18px; border-radius: 32px; }
             .title-section h1 { font-size: 22px; }
@@ -175,6 +248,15 @@
     </style>
 </head>
 <body>
+
+    <div class="bg-animation"></div>
+    <div class="particles">
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <div class="container">
         <div class="glass-card">
             <div class="header">
@@ -185,7 +267,7 @@
                 <div class="sub">متن فارسی ⇄ کد مخفی</div>
             </div>
             <div class="input-label">📝 بنویس... (فقط فارسی)</div>
-            <textarea id="inputBox" rows="3" placeholder="مثال:&#10;سلام خوبی 🥺&#10;یا&#10;15_27_1_28•9_30_2_32"></textarea>
+            <textarea id="inputBox" rows="3" placeholder="مثال:&#10;ا۱&#10;ا ۱ ا&#10;یا&#10;1_α_1"></textarea>
             <div class="result-box" id="resultBox">
                 <div class="result-header">
                     <div class="label">🔓 نتیجه</div>
@@ -195,7 +277,11 @@
             </div>
         </div>
     </div>
+
     <script>
+        // ==============================================
+        // دیکشنری‌ها
+        // ==============================================
         const letterMap = {
             'ا':'1','آ':'1','ب':'2','پ':'3','ت':'4','ث':'5',
             'ج':'6','چ':'7','ح':'8','خ':'9','د':'10','ذ':'11',
@@ -204,70 +290,204 @@
             'ق':'24','ک':'25','گ':'26','ل':'27','م':'28','ن':'29',
             'و':'30','ه':'31','ی':'32'
         };
+
+        // اعداد به یونانی (۰ و ۱ جدا)
+        const numberToGreek = {
+            '0': 'ο', '1': 'α', '2': 'β', '3': 'γ', '4': 'δ',
+            '5': 'ε', '6': 'ϛ', '7': 'ζ', '8': 'η', '9': 'θ', '10': 'ι'
+        };
+
+        // معکوس یونانی به عدد
+        const greekToNum = {
+            'ο': '0', 'α': '1', 'β': '2', 'γ': '3', 'δ': '4',
+            'ε': '5', 'ϛ': '6', 'ζ': '7', 'η': '8', 'θ': '9', 'ι': '10'
+        };
+
         const numMap = {};
         for (let k in letterMap) {
             if (!numMap[letterMap[k]]) numMap[letterMap[k]] = k;
         }
+
         const inputBox = document.getElementById('inputBox');
         const outputDiv = document.getElementById('outputText');
         const resultBox = document.getElementById('resultBox');
 
-        function encodeText(text) {
+        // ==============================================
+        // تابع تشخیص نوع کاراکتر
+        // ==============================================
+        function isPersian(ch) {
+            return /[ا-ی]/.test(ch);
+        }
+
+        function isDigit(ch) {
+            return /[0-9]/.test(ch);
+        }
+
+        function isGreek(ch) {
+            return /[α-ω]/.test(ch) || ch === 'ϛ';
+        }
+
+        // ==============================================
+        // تبدیل به یونانی با قوانین جدید
+        // ==============================================
+        function encodeToGreek(text) {
             let lines = text.split('\n');
             let out = [];
+
             for (let line of lines) {
                 let parts = [];
-                let word = [];
-                let hasEng = false;
+                let currentPart = [];
+                let hasEnglish = false;
+
                 for (let ch of line) {
-                    if (letterMap[ch]) {
-                        word.push(letterMap[ch]);
-                    } else if (ch === ' ' || ch === '\t') {
-                        if (word.length) { parts.push(word.join('_')); word = []; }
-                        parts.push('•');
-                    } else if (/[a-zA-Z]/.test(ch)) {
-                        hasEng = true; break;
-                    } else if (/[0-9]/.test(ch)) {
-                        word.push('d' + ch);
-                    } else {
-                        if (word.length) { parts.push(word.join('_')); word = []; }
+                    if (/[a-zA-Z]/.test(ch)) {
+                        hasEnglish = true;
+                        break;
+                    }
+
+                    // اگر حرف فارسی بود
+                    if (isPersian(ch)) {
+                        currentPart.push(letterMap[ch] || ch);
+                    }
+                    // اگر عدد بود
+                    else if (isDigit(ch)) {
+                        // چک کن که قبلش حروف فارسی بوده یا نه
+                        let lastIndex = currentPart.length - 1;
+                        let prevChar = currentPart[lastIndex] || '';
+
+                        // اگه قبلاً چیزی بود و عدد بود، یونانی کن
+                        if (prevChar && isDigit(prevChar)) {
+                            // اگه قبلاً عدد بود، یونانی کن
+                            currentPart[lastIndex] = numberToGreek[prevChar] || prevChar;
+                        }
+                        currentPart.push(numberToGreek[ch] || ch);
+                    }
+                    // اگر فاصله بود
+                    else if (ch === ' ' || ch === '\t') {
+                        if (currentPart.length > 0) {
+                            parts.push(currentPart.join(''));
+                            currentPart = [];
+                        }
+                        parts.push('_');
+                    }
+                    // بقیه کاراکترها (علامت، ایموجی، ...)
+                    else {
+                        if (currentPart.length > 0) {
+                            parts.push(currentPart.join(''));
+                            currentPart = [];
+                        }
                         parts.push(ch);
                     }
                 }
-                if (hasEng) return { error: true, msg: '❌ فقط متن فارسی مجاز است' };
-                if (word.length) parts.push(word.join('_'));
-                out.push(parts.join(''));
+
+                if (hasEnglish) {
+                    return { error: true, msg: '❌ فقط متن فارسی مجاز است' };
+                }
+
+                if (currentPart.length > 0) {
+                    parts.push(currentPart.join(''));
+                }
+
+                // تبدیل اعداد داخل کلمه به یونانی (اگه کنار حروف فارسی باشن)
+                let result = '';
+                let i = 0;
+                while (i < parts.length) {
+                    let part = parts[i];
+                    // اگه part عددی بود و قسمت بعد یا قبل فارسی داشت
+                    let isDigitPart = /^\d+$/.test(part);
+                    let nextPart = parts[i + 1] || '';
+                    let prevPart = parts[i - 1] || '';
+
+                    if (isDigitPart && (isPersian(prevPart) || isPersian(nextPart))) {
+                        // عدد رو به یونانی تبدیل کن
+                        let greekPart = '';
+                        for (let ch of part) {
+                            greekPart += numberToGreek[ch] || ch;
+                        }
+                        result += greekPart;
+                    } else {
+                        result += part;
+                    }
+                    i++;
+                }
+
+                // نهایی‌سازی: اگه عدد تنها بود، عدد معمولی بمونه
+                // ولی اگه کنار فارسی بود، یونانی بشه
+                let finalResult = '';
+                let tempParts = result.split('_');
+
+                for (let part of tempParts) {
+                    // اگه part فقط عدد بود و قبل/بعدش فارسی داشت، یونانی کن
+                    if (/^\d+$/.test(part)) {
+                        // چک کن که آیا توی کل خط فارسی وجود داره؟
+                        let hasPersianInLine = /[ا-ی]/.test(line);
+                        if (hasPersianInLine) {
+                            let greekPart = '';
+                            for (let ch of part) {
+                                greekPart += numberToGreek[ch] || ch;
+                            }
+                            finalResult += greekPart;
+                        } else {
+                            finalResult += part;
+                        }
+                    } else {
+                        finalResult += part;
+                    }
+                    finalResult += '_';
+                }
+
+                // حذف _ اضافه آخر
+                if (finalResult.endsWith('_')) {
+                    finalResult = finalResult.slice(0, -1);
+                }
+
+                // جایگزینی فاصله‌ها
+                finalResult = finalResult.replace(/ /g, '_');
+
+                out.push(finalResult);
             }
+
             return { error: false, result: out.join('\n') };
         }
 
+        // ==============================================
+        // تبدیل برعکس (یونانی و کد به فارسی)
+        // ==============================================
         function decodeText(text) {
             let lines = text.split('\n');
             let out = [];
+
             for (let line of lines) {
-                let segs = line.split('•');
+                let segs = line.split('_');
                 let words = [];
+                let currentWord = '';
+
                 for (let seg of segs) {
-                    let codes = seg.split('_');
-                    let w = '';
-                    for (let c of codes) {
-                        if (c.startsWith('d') && c.slice(1).match(/^\d+$/)) {
-                            w += c.slice(1);
-                        } else if (numMap[c]) {
-                            w += numMap[c];
-                        } else if (c.match(/^\d+$/)) {
-                            w += (numMap[c] || c);
+                    // اگه یونانی بود به عدد برگردون
+                    let converted = '';
+                    for (let ch of seg) {
+                        if (greekToNum[ch]) {
+                            converted += greekToNum[ch];
+                        } else if (numMap[ch]) {
+                            converted += numMap[ch];
+                        } else if (ch.match(/^\d+$/)) {
+                            converted += ch;
                         } else {
-                            w += c;
+                            converted += ch;
                         }
                     }
-                    words.push(w);
+                    words.push(converted);
                 }
+
                 out.push(words.join(' '));
             }
+
             return { error: false, result: out.join('\n') };
         }
 
+        // ==============================================
+        // تبدیل خودکار (تشخیص)
+        // ==============================================
         function autoConvert() {
             const raw = inputBox.value;
             if (!raw.trim()) {
@@ -275,83 +495,18 @@
                 outputDiv.className = 'result-content empty';
                 return;
             }
+
             if (/[a-zA-Z]/.test(raw)) {
                 outputDiv.textContent = '❌ فقط متن فارسی مجاز است';
                 outputDiv.className = 'result-content error';
                 showToast('❌ فقط فارسی', 'error');
                 return;
             }
+
             const hasDigits = /\d/.test(raw);
             const hasPersian = /[ا-ی]/.test(raw);
+
             let result;
-            if (hasDigits && !hasPersian) {
-                result = decodeText(raw);
-            } else if (hasPersian) {
-                result = encodeText(raw);
-            } else {
-                outputDiv.textContent = 'نتیجه اینجا نمایش داده می‌شود...';
-                outputDiv.className = 'result-content empty';
-                return;
-            }
-            if (result.error) {
-                outputDiv.textContent = result.msg;
-                outputDiv.className = 'result-content error';
-                showToast(result.msg, 'error');
-                return;
-            }
-            outputDiv.textContent = result.result;
-            outputDiv.className = 'result-content';
-        }
 
-        function copyResult() {
-            const txt = outputDiv.textContent;
-            if (!txt || txt === 'نتیجه اینجا نمایش داده می‌شود...' || txt.includes('❌')) {
-                showToast('⚠️ چیزی برای کپی نیست', 'error');
-                return;
-            }
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(txt).then(() => {
-                    showToast('✅ کپی شد', 'success');
-                }).catch(() => fallbackCopy(txt));
-            } else {
-                fallbackCopy(txt);
-            }
-        }
-
-        function fallbackCopy(text) {
-            try {
-                const ta = document.createElement('textarea');
-                ta.value = text;
-                ta.style.position = 'fixed';
-                ta.style.top = '-9999px';
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                showToast('✅ کپی شد', 'success');
-            } catch (_) {
-                showToast('❌ کپی نشد', 'error');
-            }
-        }
-
-        function showToast(msg, type = 'success') {
-            const old = document.querySelector('.toast');
-            if (old) old.remove();
-            const t = document.createElement('div');
-            t.className = `toast toast-${type}`;
-            t.textContent = msg;
-            document.body.appendChild(t);
-            setTimeout(() => t.remove(), 2800);
-        }
-
-        let debounceTimer;
-        inputBox.addEventListener('input', function() {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(autoConvert, 200);
-        });
-        resultBox.addEventListener('click', copyResult);
-        outputDiv.textContent = 'نتیجه اینجا نمایش داده می‌شود...';
-        outputDiv.className = 'result-content empty';
-    </script>
-</body>
-</html>
+            // اگه فقط عدد بود یا کد مخفی بود (بدون فارسی) → دیکود
+            if (ha
