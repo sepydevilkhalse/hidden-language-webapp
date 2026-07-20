@@ -3,41 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="زبان مخفی">
     <title>زبان مخفی</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&amp;display=swap');
+        
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            font-family: 'Noto Nastaliq Urdu', 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
         }
+
         body {
+            background: linear-gradient(135deg, #0f0c29, #1a1a3e, #16213e);
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif;
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
-            background: #0b0b1e;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 16px;
+            align-items: flex-start;
             position: relative;
             overflow-x: hidden;
         }
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at 20% 50%, rgba(139,92,246,0.1) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(99,102,241,0.08) 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, rgba(236,72,153,0.05) 0%, transparent 50%);
-            animation: bgPulse 6s ease-in-out infinite alternate;
-            z-index: 0;
-        }
-        @keyframes bgPulse {
-            0% { opacity: 0.6; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.05); }
-        }
-        .particles {
+
+        /* ===== ستاره‌های چشمک‌زن ===== */
+        .stars {
             position: fixed;
             top: 0;
             left: 0;
@@ -47,466 +42,1145 @@
             z-index: 0;
             overflow: hidden;
         }
-        .particle {
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite alternate;
+            box-shadow: 0 0 6px rgba(255,255,255,0.3);
+            will-change: transform, opacity;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.15; transform: scale(0.6); }
+            100% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* ===== ذرات شناور ===== */
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .f-particle {
             position: absolute;
             border-radius: 50%;
-            background: rgba(180,130,255,0.2);
-            animation: floatUp linear infinite;
-            box-shadow: 0 0 15px rgba(180,130,255,0.1);
+            background: rgba(139, 92, 246, 0.06);
+            animation: floatParticle var(--duration) ease-in-out infinite alternate;
+            will-change: transform;
         }
-        .particle:nth-child(1) { width: 6px; height: 6px; left: 8%; animation-duration: 18s; animation-delay: 0s; }
-        .particle:nth-child(2) { width: 4px; height: 4px; left: 18%; animation-duration: 14s; animation-delay: 2s; }
-        .particle:nth-child(3) { width: 8px; height: 8px; left: 30%; animation-duration: 22s; animation-delay: 4s; }
-        .particle:nth-child(4) { width: 5px; height: 5px; left: 45%; animation-duration: 16s; animation-delay: 1s; }
-        .particle:nth-child(5) { width: 7px; height: 7px; left: 58%; animation-duration: 20s; animation-delay: 3s; }
-        .particle:nth-child(6) { width: 4px; height: 4px; left: 70%; animation-duration: 13s; animation-delay: 5s; }
-        .particle:nth-child(7) { width: 9px; height: 9px; left: 82%; animation-duration: 24s; animation-delay: 2s; }
-        .particle:nth-child(8) { width: 5px; height: 5px; left: 92%; animation-duration: 17s; animation-delay: 6s; }
-        .particle:nth-child(9) { width: 6px; height: 6px; left: 25%; animation-duration: 19s; animation-delay: 7s; }
-        .particle:nth-child(10) { width: 4px; height: 4px; left: 65%; animation-duration: 15s; animation-delay: 4s; }
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        @keyframes floatParticle {
+            0% { transform: translateY(0px) scale(1) rotate(0deg); }
+            100% { transform: translateY(-25px) scale(1.05) rotate(10deg); }
         }
+
         .container {
             width: 100%;
-            max-width: 540px;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 16px;
+            padding-top: 18px;
             position: relative;
             z-index: 1;
-            animation: containerIn 0.8s ease-out;
         }
-        @keyframes containerIn {
-            from { opacity: 0; transform: translateY(40px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+        
         .glass-card {
-            background: rgba(18,16,40,0.55);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-radius: 40px;
-            padding: 28px 22px 24px;
-            border: 1px solid rgba(200,160,255,0.12);
-            box-shadow: 0 20px 70px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
-            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
-            animation: cardIn 0.6s ease-out;
+            background: rgba(25, 20, 45, 0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 14px 18px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.03);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+            position: relative;
         }
+
+        /* ===== نور بنفش پاستیلی دور کارت‌ها ===== */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 33px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(180, 130, 255, 0.12), rgba(160, 120, 255, 0.04), rgba(180, 130, 255, 0.12));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: breatheGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes breatheGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
         .glass-card:hover {
-            border-color: rgba(200,160,255,0.2);
-            box-shadow: 0 25px 80px rgba(0,0,0,0.7), 0 0 60px rgba(180,130,255,0.04);
             transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3), 0 0 30px rgba(139, 92, 246, 0.04);
+            border-color: rgba(139, 92, 246, 0.2);
         }
-        @keyframes cardIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.97); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+        
         .header {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-bottom: 18px;
-            margin-bottom: 18px;
-            border-bottom: 1px solid rgba(200,160,255,0.06);
+            margin-bottom: 16px;
         }
-        .logo-text {
-            color: #fff;
-            font-size: 24px;
+        
+        .time {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #c4b5fd;
+            font-family: monospace;
+            letter-spacing: 2px;
+            background: rgba(139, 92, 246, 0.05);
+            padding: 4px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.08);
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 6px 0 4px 0;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             font-weight: 700;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
             animation: titleGlow 3s ease-in-out infinite;
         }
+        
         @keyframes titleGlow {
-            0%,100% { text-shadow: 0 0 2px rgba(255,255,255,0.2); }
-            50% { text-shadow: 0 0 15px rgba(180,130,255,0.3); }
+            0%, 100% { text-shadow: 0 0 10px rgba(139, 92, 246, 0.1), 0 0 20px rgba(139, 92, 246, 0.05); }
+            50% { text-shadow: 0 0 20px rgba(139, 92, 246, 0.2), 0 0 40px rgba(139, 92, 246, 0.1); }
         }
-        .logo-text span { color: #c4b5fd; }
-        .title-section { text-align: center; margin-bottom: 22px; }
-        .title-section h1 { color: #fff; font-size: 26px; font-weight: 700; animation: fadeIn 0.5s ease-out; }
-        .title-section .sub { color: #a78bfa; font-size: 14px; margin-top: 4px; animation: fadeIn 0.7s ease-out; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .sub {
+            text-align: center;
+            color: #a78bfa;
+            margin-bottom: 18px;
+            font-size: 0.65rem;
+            border-bottom: 1px dashed rgba(139, 92, 246, 0.2);
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 5px;
+            padding-left: 12px;
+            padding-right: 12px;
         }
-        .input-label {
-            color: #b0a0d0;
-            font-size: 14px;
-            margin-bottom: 8px;
-            animation: fadeIn 0.8s ease-out;
+        
+        .input-area {
+            margin-bottom: 16px;
         }
+        
+        .input-area label {
+            display: block;
+            font-size: 0.6rem;
+            color: #c4b5fd;
+            margin-bottom: 6px;
+            margin-right: 6px;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+            opacity: 0.8;
+        }
+        
         textarea {
             width: 100%;
-            min-height: 120px;
-            background: rgba(10,8,28,0.6);
-            border: 1px solid rgba(180,130,255,0.12);
-            border-radius: 24px;
-            color: #f0ecff;
-            font-size: 16px;
-            padding: 14px 18px;
+            background: rgba(15, 12, 30, 0.5);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 22px;
+            color: #f1f5f9;
+            font-size: 0.95rem;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', monospace;
             resize: none;
             outline: none;
-            line-height: 1.8;
+            padding: 14px 16px;
             direction: rtl;
+            min-height: 110px;
+            height: auto;
+            overflow-y: hidden;
             transition: all 0.3s ease;
-            animation: fadeIn 0.9s ease-out;
+            line-height: 1.7;
+            position: relative;
         }
+        
         textarea:focus {
-            border-color: rgba(180,130,255,0.3);
-            background: rgba(10,8,28,0.8);
-            box-shadow: 0 0 40px rgba(180,130,255,0.04), inset 0 0 40px rgba(180,130,255,0.02);
-            transform: scale(1.005);
+            border-color: rgba(139, 92, 246, 0.35);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.05), inset 0 0 20px rgba(139, 92, 246, 0.02);
+            background: rgba(15, 12, 30, 0.7);
         }
+        
         textarea::placeholder {
             color: #4a4a6a;
-            font-size: 14px;
-            line-height: 1.8;
+            font-size: 0.85rem;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
         }
-        .result-box {
-            margin-top: 18px;
-            background: rgba(10,8,28,0.4);
-            border-radius: 24px;
-            padding: 16px 20px;
-            border: 1px solid rgba(180,130,255,0.06);
+        
+        .result-area {
             cursor: pointer;
-            min-height: 60px;
-            transition: all 0.25s ease;
-            animation: resultIn 0.4s ease-out;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+            padding: 10px 16px !important;
+            position: relative;
+            overflow: hidden;
         }
-        .result-box:hover {
-            border-color: rgba(180,130,255,0.12);
-            background: rgba(10,8,28,0.6);
+        
+        .result-area::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.02) 0%, transparent 60%);
+            animation: shimmer 6s ease-in-out infinite;
+            pointer-events: none;
         }
-        .result-box:active { transform: scale(0.97); }
-        @keyframes resultIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        @keyframes shimmer {
+            0%, 100% { transform: translate(-30%, -30%) scale(1); opacity: 0; }
+            50% { transform: translate(30%, 30%) scale(1.5); opacity: 1; }
         }
-        .result-header {
+        
+        .result-area:active {
+            transform: scale(0.97);
+        }
+        
+        .result-label {
+            font-size: 0.6rem;
+            color: #c4b5fd;
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
             margin-bottom: 6px;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+            position: relative;
+            z-index: 1;
         }
-        .result-header .label { color: #a090c0; font-size: 13px; }
-        .result-header .hint {
+        
+        .result-text {
+            font-size: 0.95rem;
+            word-wrap: break-word;
+            line-height: 1.6;
+            font-weight: 500;
+            color: #f1f5f9;
+            min-height: 28px;
+            white-space: pre-wrap;
+            transition: all 0.3s ease;
+            font-family: 'Apple Color Emoji', 'Noto Nastaliq Urdu', -apple-system, 'Noto Color Emoji', monospace;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .result-text[dir="rtl"] {
+            text-align: right;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', monospace;
+        }
+        
+        .result-text[dir="ltr"] {
+            text-align: left;
+            direction: ltr;
+            font-family: 'Apple Color Emoji', 'Noto Color Emoji', 'Noto Nastaliq Urdu', monospace;
+        }
+        
+        .copy-hint {
+            font-size: 0.55rem;
             color: #6a6a8a;
-            font-size: 11px;
-            animation: hintPulse 2s ease-in-out infinite;
+            text-align: center;
+            margin-top: 8px;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+            animation: hintPulse 2.5s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
         }
+        
         @keyframes hintPulse {
-            0%,100% { opacity: 0.6; }
+            0%, 100% { opacity: 0.5; }
             50% { opacity: 1; }
         }
-        .result-content {
-            color: #f0ecff;
-            font-size: 16px;
-            line-height: 1.8;
-            min-height: 28px;
-            word-wrap: break-word;
-            direction: ltr;
-            text-align: left;
-            transition: all 0.2s ease;
+        
+        .swap-hint {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #a78bfa;
+            margin-top: 16px;
+            background: rgba(30, 27, 46, 0.3);
+            padding: 8px;
+            border-radius: 24px;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+            animation: pulseGlow 3s ease-in-out infinite;
+            border: 1px solid rgba(139, 92, 246, 0.06);
+            position: relative;
         }
-        .result-content.empty { color: #4a4a6a; font-style: italic; }
-        .result-content.error {
-            color: #f8a0a0;
-            animation: shake 0.4s ease-out;
+
+        .swap-hint::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 25px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(180, 130, 255, 0.1), rgba(160, 120, 255, 0.03), rgba(180, 130, 255, 0.1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: breatheGlow 4s ease-in-out infinite;
         }
-        @keyframes shake {
-            0%,100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+        
+        @keyframes pulseGlow {
+            0%, 100% { background: rgba(30, 27, 46, 0.3); border-color: rgba(139, 92, 246, 0.06); }
+            50% { background: rgba(30, 27, 46, 0.5); border-color: rgba(139, 92, 246, 0.15); }
         }
+
+        /* ===== دکمه‌ها ===== */
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            padding: 8px 18px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 24px;
+            background: rgba(25, 20, 45, 0.3);
+            color: #c4b5fd;
+            font-size: 0.7rem;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.08), transparent);
+            transition: all 0.5s ease;
+        }
+        .btn:hover::before {
+            left: 100%;
+        }
+        .btn:hover {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.1);
+        }
+        .btn:active {
+            transform: scale(0.93);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.1));
+            border-color: rgba(139, 92, 246, 0.25);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(99, 102, 241, 0.2));
+        }
+
+        /* ===== مودال ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-box {
+            background: rgba(25, 20, 45, 0.8);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-radius: 36px;
+            padding: 28px 32px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(139, 92, 246, 0.03);
+            animation: modalPop 0.3s ease both;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-box::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 37px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(180, 130, 255, 0.12), rgba(160, 120, 255, 0.04), rgba(180, 130, 255, 0.12));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: breatheGlow 4s ease-in-out infinite;
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.92) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .modal-title {
+            color: #c4b5fd;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            text-align: center;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            padding-bottom: 12px;
+        }
+        .modal-body {
+            color: #e2e8f0;
+            font-size: 0.85rem;
+            line-height: 1.9;
+            text-align: center;
+            white-space: pre-wrap;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            background: none;
+            border: none;
+            color: #a78bfa;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .modal-close:hover {
+            transform: rotate(90deg);
+            color: #fff;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
         .toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 12px 28px;
+            padding: 10px 24px;
             border-radius: 40px;
-            font-size: 15px;
-            font-weight: 600;
-            z-index: 999;
-            animation: toastAnim 2.8s ease forwards;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: toastFly 2.5s ease forwards;
             pointer-events: none;
-            backdrop-filter: blur(24px);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 12px 50px rgba(0,0,0,0.5);
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
         }
-        @keyframes toastAnim {
+        
+        @keyframes toastFly {
             0% { opacity: 0; transform: translateX(-50%) translateY(20px) scale(0.95); }
-            12% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
-            88% { opacity: 1; }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+            85% { opacity: 1; }
             100% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.95); visibility: hidden; }
         }
-        .toast-success { background: rgba(120,180,255,0.85); color: #fff; }
-        .toast-error { background: rgba(255,120,120,0.85); color: #fff; }
+        
+        .toast-success {
+            background: rgba(16, 185, 129, 0.85);
+            color: white;
+        }
+        
+        .toast-error {
+            background: rgba(220, 38, 38, 0.85);
+            color: white;
+        }
+        
+        .shake {
+            animation: shakeAnim 0.3s ease-in-out;
+        }
+        
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        
+        .heart-drop {
+            position: fixed;
+            top: -30px;
+            pointer-events: none;
+            z-index: 9999;
+            animation: drop linear forwards;
+            font-family: 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.2));
+        }
+        
+        @keyframes drop {
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+        
+        .emoji {
+            display: inline-block;
+            animation: emojiPop 0.3s ease-out;
+            font-family: 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+        }
+        
+        @keyframes emojiPop {
+            from { transform: scale(0.7) rotate(-10deg); opacity: 0; }
+            to { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 8, 28, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+        }
+
         @media (max-width: 480px) {
-            .glass-card { padding: 20px 16px 18px; border-radius: 32px; }
-            .title-section h1 { font-size: 22px; }
-            textarea { font-size: 15px; min-height: 100px; }
-            .logo-text { font-size: 20px; }
+            .modal-box {
+                padding: 20px 18px;
+                border-radius: 28px;
+            }
+            .glass-card {
+                padding: 12px 14px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-animation"></div>
-    <div class="particles">
-        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-        <div class="particle"></div>
+<!-- ===== ستاره‌ها ===== -->
+<div class="stars" id="stars"></div>
+
+<!-- ===== ذرات شناور ===== -->
+<div class="floating-particles" id="floatingParticles"></div>
+
+<!-- ===== مودال ===== -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div class="modal-title" id="modalTitle">عنوان</div>
+        <div class="modal-body" id="modalBody">متن</div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="glass-card header">
+        <div class="time" id="clock">--:--:--</div>
     </div>
 
-    <div class="container">
-        <div class="glass-card">
-            <div class="header">
-                <div class="logo-text">زبان <span>مخفی</span></div>
+    <div class="glass-card" style="margin-top: 0;">
+        <h1>
+            <span class="emoji">🤫</span> زبان مخفی <span class="emoji">🔐</span>
+        </h1>
+        <div style="text-align: center;"><span class="sub">تبدیل خودکار متن ⇄ کد</span></div>
+
+        <div class="input-area">
+            <label>📝 بنویس... (فقط حروف فارسی)</label>
+            <textarea id="inputBox" rows="3" placeholder="مثال:&#10;سلام ۱۲۳ خوبی&#10;یا&#10;15_27_1_28•|α_β_γ|•9_30_2_32"></textarea>
+        </div>
+
+        <div class="result-area glass-card" id="resultBox" style="padding: 12px 16px; margin: 0;">
+            <div class="result-label">
+                <span class="emoji">🔓</span> نتیجه
             </div>
-            <div class="title-section">
-                <h1>تبدیل خودکار</h1>
-                <div class="sub">متن فارسی ⇄ کد مخفی</div>
-            </div>
-            <div class="input-label">📝 بنویس... (فقط فارسی)</div>
-            <textarea id="inputBox" rows="3" placeholder="مثال:&#10;ا۱&#10;ا ۱ ا&#10;یا&#10;1_α_1"></textarea>
-            <div class="result-box" id="resultBox">
-                <div class="result-header">
-                    <div class="label">🔓 نتیجه</div>
-                    <div class="hint">👆 کلیک برای کپی</div>
-                </div>
-                <div class="result-content empty" id="outputText">نتیجه اینجا نمایش داده می‌شود...</div>
-            </div>
+            <div id="outputText" class="result-text" dir="rtl">—</div>
+            <div class="copy-hint">👇 برای کپی، روی نتیجه ضربه بزنید 👇</div>
+        </div>
+
+        <div class="swap-hint">
+            ✨ هوشمند | متن فارسی ←→ کد ✨
         </div>
     </div>
 
-    <script>
-        // ==============================================
-        // دیکشنری‌ها
-        // ==============================================
-        const letterMap = {
-            'ا':'1','آ':'1','ب':'2','پ':'3','ت':'4','ث':'5',
-            'ج':'6','چ':'7','ح':'8','خ':'9','د':'10','ذ':'11',
-            'ر':'12','ز':'13','ژ':'14','س':'15','ش':'16','ص':'17',
-            'ض':'18','ط':'19','ظ':'20','ع':'21','غ':'22','ف':'23',
-            'ق':'24','ک':'25','گ':'26','ل':'27','م':'28','ن':'29',
-            'و':'30','ه':'31','ی':'32'
-        };
+    <!-- ===== دکمه‌ها ===== -->
+    <div class="glass-card" style="padding: 12px 16px;">
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="showAbout()">ℹ️ درباره</button>
+            <button class="btn btn-primary" onclick="showStats()">📊 آمار من</button>
+            <button class="btn btn-primary" onclick="showHistory()">📜 تاریخچه</button>
+        </div>
+    </div>
+</div>
 
-        // اعداد به یونانی (۰ و ۱ جدا)
-        const numberToGreek = {
-            '0': 'ο', '1': 'α', '2': 'β', '3': 'γ', '4': 'δ',
-            '5': 'ε', '6': 'ϛ', '7': 'ζ', '8': 'η', '9': 'θ', '10': 'ι'
-        };
-
-        // معکوس یونانی به عدد
-        const greekToNum = {
-            'ο': '0', 'α': '1', 'β': '2', 'γ': '3', 'δ': '4',
-            'ε': '5', 'ϛ': '6', 'ζ': '7', 'η': '8', 'θ': '9', 'ι': '10'
-        };
-
-        const numMap = {};
-        for (let k in letterMap) {
-            if (!numMap[letterMap[k]]) numMap[letterMap[k]] = k;
+<script>
+    // ==============================================
+    // ستاره‌ها
+    // ==============================================
+    function createStars() {
+        const container = document.getElementById('stars');
+        const count = 150;
+        for (let i = 0; i < count; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.setProperty('--duration', (Math.random() * 4 + 2) + 's');
+            star.style.animationDelay = (Math.random() * 6) + 's';
+            container.appendChild(star);
         }
+    }
+    createStars();
 
+    // ==============================================
+    // ذرات شناور
+    // ==============================================
+    function createFloatingParticles() {
+        const container = document.getElementById('floatingParticles');
+        const count = 15;
+        for (let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            p.className = 'f-particle';
+            const size = Math.random() * 100 + 50;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            p.style.setProperty('--duration', (Math.random() * 8 + 6) + 's');
+            p.style.animationDelay = (Math.random() * 5) + 's';
+            p.style.opacity = Math.random() * 0.08 + 0.02;
+            container.appendChild(p);
+        }
+    }
+    createFloatingParticles();
+
+    // ==============================================
+    // مودال
+    // ==============================================
+    function showModal(title, body) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalBody').textContent = body;
+        document.getElementById('modalOverlay').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('modalOverlay').classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('modalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // ==============================================
+    // دکمه‌ها
+    // ==============================================
+    function showAbout() {
+        showModal('ℹ️ درباره ربات', 
+`🤖 نسخه: 3.34
+📅 1404/11/25
+
+✅ تبدیل فارسی ↔ کد مخفی
+✅ تشخیص خودکار
+✅ پشتیبانی از اعداد یونانی (ο, α, β, γ, ...)
+✅ تاریخچه و آمار`);
+    }
+
+    let conversionCount = 0;
+
+    function showStats() {
+        showModal('📊 آمار من', 
+`📝 تعداد تبدیل‌ها: ${conversionCount}
+📆 تاریخ عضویت: ۱۴۰۴/۰۳/۱۶`);
+    }
+
+    function showHistory() {
+        if (conversionCount === 0) {
+            showModal('📜 تاریخچه', '📜 هنوز تبدیلی انجام ندادید!');
+            return;
+        }
+        showModal('📜 تاریخچه', 
+`📌 آخرین تبدیل‌ها:
+
+${historyLog || 'هنوز تبدیلی انجام ندادید!'}`);
+    }
+
+    let historyLog = '';
+
+    function dropHearts() {
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart-drop';
+                heart.innerHTML = ['💕', '❤️', '💖', '💗', '💜', '✨'][Math.floor(Math.random() * 6)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = Math.random() * 2.5 + 2 + 's';
+                heart.style.fontSize = Math.random() * 18 + 12 + 'px';
+                heart.style.opacity = Math.random() * 0.5 + 0.3;
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 4000);
+            }, i * 60);
+        }
+    }
+
+    function p2e(str) {
+        const map = { '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9' };
+        return str.replace(/[۰-۹]/g, m => map[m]);
+    }
+
+    function startClock() {
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            document.getElementById('clock').innerText = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+            
+            if (hours === minutes && minutes !== 0 && seconds === 0) {
+                dropHearts();
+            }
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
+    startClock();
+
+    // ==============================================
+    // دیکشنری اصلی
+    // ==============================================
+    const letterToNum = {
+        'ا':1,'آ':1,'ب':2,'پ':3,'ت':4,'ث':5,'ج':6,'چ':7,
+        'ح':8,'خ':9,'د':10,'ذ':11,'ر':12,'ز':13,'ژ':14,
+        'س':15,'ش':16,'ص':17,'ض':18,'ط':19,'ظ':20,
+        'ع':21,'غ':22,'ف':23,'ق':24,'ک':25,'گ':26,
+        'ل':27,'م':28,'ن':29,'و':30,'ه':31,'ی':32
+    };
+    
+    const numToLetter = {};
+    for (let key in letterToNum) {
+        let num = letterToNum[key];
+        if (num === 1) {
+            numToLetter[num] = 'ا';
+        } else if (!numToLetter[num]) {
+            numToLetter[num] = key;
+        }
+    }
+
+    const numberToGreek = {
+        '0': 'ο', '1': 'α', '2': 'β', '3': 'γ', '4': 'δ',
+        '5': 'ε', '6': 'ϛ', '7': 'ζ', '8': 'η', '9': 'θ', '10': 'ι'
+    };
+
+    const greekToNum = {
+        'ο': '0', 'α': '1', 'β': '2', 'γ': '3', 'δ': '4',
+        'ε': '5', 'ϛ': '6', 'ζ': '7', 'η': '8', 'θ': '9', 'ι': '10'
+    };
+
+    function isEnglishLetter(char) {
+        return /[a-zA-Z]/.test(char);
+    }
+
+    function vibrate() {
+        if (window.navigator && window.navigator.vibrate) {
+            window.navigator.vibrate(60);
+        }
+    }
+
+    function showErrorToast(msg) {
+        let old = document.querySelector('.toast');
+        if (old) old.remove();
+        
+        let toast = document.createElement('div');
+        toast.className = 'toast toast-error';
+        toast.innerHTML = `❌ ${msg} ❌`;
+        document.body.appendChild(toast);
+        
+        vibrate();
+        
         const inputBox = document.getElementById('inputBox');
-        const outputDiv = document.getElementById('outputText');
-        const resultBox = document.getElementById('resultBox');
+        inputBox.classList.add('shake');
+        setTimeout(() => inputBox.classList.remove('shake'), 300);
+        
+        setTimeout(() => toast.remove(), 2500);
+    }
 
-        // ==============================================
-        // تابع تشخیص نوع کاراکتر
-        // ==============================================
-        function isPersian(ch) {
-            return /[ا-ی]/.test(ch);
+    function showSuccessToast(msg) {
+        let old = document.querySelector('.toast');
+        if (old) old.remove();
+        
+        let toast = document.createElement('div');
+        toast.className = 'toast toast-success';
+        toast.innerHTML = `✅ ${msg} ✅`;
+        document.body.appendChild(toast);
+        
+        vibrate();
+        
+        setTimeout(() => toast.remove(), 2500);
+    }
+
+    // ==============================================
+    // توابع تبدیل (اصلاح شده نهایی)
+    // ==============================================
+    function textToCode(line) {
+        let result = '';
+        let currentWordCodes = [];
+        let hasPersian = false;
+        let greekBuffer = [];
+        let inGreek = false;
+        
+        for (let i = 0; i < line.length; i++) {
+            let ch = line[i];
+            
+            if (letterToNum[ch]) {
+                hasPersian = true;
+                if (inGreek) {
+                    greekBuffer.push(letterToNum[ch]);
+                } else {
+                    currentWordCodes.push(letterToNum[ch]);
+                }
+            } 
+            else if (ch === ' ') {
+                // اگه بافر یونانی داشتیم و به فاصله رسیدیم
+                if (greekBuffer.length > 0) {
+                    if (result.length > 0 && !result.endsWith(' ')) {
+                        result += '•';
+                    }
+                    result += '|' + greekBuffer.join('_') + '|';
+                    greekBuffer = [];
+                    inGreek = false;
+                }
+                if (currentWordCodes.length > 0) {
+                    if (result.length > 0 && !result.endsWith(' ')) {
+                        result += '•';
+                    }
+                    result += currentWordCodes.join('_');
+                    currentWordCodes = [];
+                }
+            }
+            else if (isEnglishLetter(ch)) {
+                showErrorToast('فقط حروف فارسی مجاز است');
+                return null;
+            }
+            else if (/[0-9]/.test(ch)) {
+                if (hasPersian) {
+                    if (!inGreek) {
+                        inGreek = true;
+                        greekBuffer = [];
+                    }
+                    greekBuffer.push(numberToGreek[ch] || ch);
+                } else {
+                    currentWordCodes.push(ch);
+                }
+            }
+            else if (/[۰-۹]/.test(ch)) {
+                let engNum = p2e(ch);
+                if (hasPersian) {
+                    if (!inGreek) {
+                        inGreek = true;
+                        greekBuffer = [];
+                    }
+                    greekBuffer.push(numberToGreek[engNum] || engNum);
+                } else {
+                    currentWordCodes.push(engNum);
+                }
+            }
+            else {
+                // کاراکتر غیر عدد و غیر فاصله
+                if (greekBuffer.length > 0) {
+                    if (result.length > 0 && !result.endsWith(' ')) {
+                        result += '•';
+                    }
+                    result += '|' + greekBuffer.join('_') + '|';
+                    greekBuffer = [];
+                    inGreek = false;
+                }
+                
+                if (currentWordCodes.length > 0) {
+                    if (result.length > 0 && !result.endsWith(' ')) {
+                        result += '•';
+                    }
+                    result += currentWordCodes.join('_');
+                    currentWordCodes = [];
+                }
+                result += ch;
+            }
         }
-
-        function isDigit(ch) {
-            return /[0-9]/.test(ch);
+        
+        if (greekBuffer.length > 0) {
+            if (result.length > 0 && !result.endsWith(' ')) {
+                result += '•';
+            }
+            result += '|' + greekBuffer.join('_') + '|';
+            greekBuffer = [];
+            inGreek = false;
         }
-
-        function isGreek(ch) {
-            return /[α-ω]/.test(ch) || ch === 'ϛ';
+        
+        if (currentWordCodes.length > 0) {
+            if (result.length > 0 && !result.endsWith(' ')) {
+                result += '•';
+            }
+            result += currentWordCodes.join('_');
+            currentWordCodes = [];
         }
+        
+        result = result.replace(/ /g, '');
+        
+        return result;
+    }
 
-        // ==============================================
-        // تبدیل به یونانی با قوانین جدید
-        // ==============================================
-        function encodeToGreek(text) {
-            let lines = text.split('\n');
-            let out = [];
-
-            for (let line of lines) {
-                let parts = [];
-                let currentPart = [];
-                let hasEnglish = false;
-
-                for (let ch of line) {
-                    if (/[a-zA-Z]/.test(ch)) {
-                        hasEnglish = true;
-                        break;
-                    }
-
-                    // اگر حرف فارسی بود
-                    if (isPersian(ch)) {
-                        currentPart.push(letterMap[ch] || ch);
-                    }
-                    // اگر عدد بود
-                    else if (isDigit(ch)) {
-                        // چک کن که قبلش حروف فارسی بوده یا نه
-                        let lastIndex = currentPart.length - 1;
-                        let prevChar = currentPart[lastIndex] || '';
-
-                        // اگه قبلاً چیزی بود و عدد بود، یونانی کن
-                        if (prevChar && isDigit(prevChar)) {
-                            // اگه قبلاً عدد بود، یونانی کن
-                            currentPart[lastIndex] = numberToGreek[prevChar] || prevChar;
-                        }
-                        currentPart.push(numberToGreek[ch] || ch);
-                    }
-                    // اگر فاصله بود
-                    else if (ch === ' ' || ch === '\t') {
-                        if (currentPart.length > 0) {
-                            parts.push(currentPart.join(''));
-                            currentPart = [];
-                        }
-                        parts.push('_');
-                    }
-                    // بقیه کاراکترها (علامت، ایموجی، ...)
-                    else {
-                        if (currentPart.length > 0) {
-                            parts.push(currentPart.join(''));
-                            currentPart = [];
-                        }
-                        parts.push(ch);
-                    }
-                }
-
-                if (hasEnglish) {
-                    return { error: true, msg: '❌ فقط متن فارسی مجاز است' };
-                }
-
-                if (currentPart.length > 0) {
-                    parts.push(currentPart.join(''));
-                }
-
-                // تبدیل اعداد داخل کلمه به یونانی (اگه کنار حروف فارسی باشن)
-                let result = '';
-                let i = 0;
-                while (i < parts.length) {
-                    let part = parts[i];
-                    // اگه part عددی بود و قسمت بعد یا قبل فارسی داشت
-                    let isDigitPart = /^\d+$/.test(part);
-                    let nextPart = parts[i + 1] || '';
-                    let prevPart = parts[i - 1] || '';
-
-                    if (isDigitPart && (isPersian(prevPart) || isPersian(nextPart))) {
-                        // عدد رو به یونانی تبدیل کن
-                        let greekPart = '';
-                        for (let ch of part) {
-                            greekPart += numberToGreek[ch] || ch;
-                        }
-                        result += greekPart;
-                    } else {
-                        result += part;
-                    }
-                    i++;
-                }
-
-                // نهایی‌سازی: اگه عدد تنها بود، عدد معمولی بمونه
-                // ولی اگه کنار فارسی بود، یونانی بشه
-                let finalResult = '';
-                let tempParts = result.split('_');
-
-                for (let part of tempParts) {
-                    // اگه part فقط عدد بود و قبل/بعدش فارسی داشت، یونانی کن
-                    if (/^\d+$/.test(part)) {
-                        // چک کن که آیا توی کل خط فارسی وجود داره؟
-                        let hasPersianInLine = /[ا-ی]/.test(line);
-                        if (hasPersianInLine) {
-                            let greekPart = '';
-                            for (let ch of part) {
-                                greekPart += numberToGreek[ch] || ch;
+    function codeToText(line) {
+        let engVersion = p2e(line);
+        
+        if (/^\d+$/.test(engVersion)) {
+            let num = parseInt(engVersion);
+            if (num >= 1 && num <= 32 && numToLetter[engVersion]) {
+                return numToLetter[engVersion];
+            }
+            return engVersion;
+        }
+        
+        let parts = engVersion.split('•');
+        let result = [];
+        
+        for (let part of parts) {
+            if (part.trim() === '') continue;
+            
+            let word = '';
+            
+            if (part.includes('|')) {
+                let subParts = part.split('|');
+                for (let sub of subParts) {
+                    if (sub.trim() === '') continue;
+                    
+                    if (sub.includes('_')) {
+                        let tokens = sub.split('_');
+                        for (let token of tokens) {
+                            if (greekToNum[token] !== undefined) {
+                                word += greekToNum[token];
+                            } else {
+                                word += token;
                             }
-                            finalResult += greekPart;
-                        } else {
-                            finalResult += part;
                         }
                     } else {
-                        finalResult += part;
-                    }
-                    finalResult += '_';
-                }
-
-                // حذف _ اضافه آخر
-                if (finalResult.endsWith('_')) {
-                    finalResult = finalResult.slice(0, -1);
-                }
-
-                // جایگزینی فاصله‌ها
-                finalResult = finalResult.replace(/ /g, '_');
-
-                out.push(finalResult);
-            }
-
-            return { error: false, result: out.join('\n') };
-        }
-
-        // ==============================================
-        // تبدیل برعکس (یونانی و کد به فارسی)
-        // ==============================================
-        function decodeText(text) {
-            let lines = text.split('\n');
-            let out = [];
-
-            for (let line of lines) {
-                let segs = line.split('_');
-                let words = [];
-                let currentWord = '';
-
-                for (let seg of segs) {
-                    // اگه یونانی بود به عدد برگردون
-                    let converted = '';
-                    for (let ch of seg) {
-                        if (greekToNum[ch]) {
-                            converted += greekToNum[ch];
-                        } else if (numMap[ch]) {
-                            converted += numMap[ch];
-                        } else if (ch.match(/^\d+$/)) {
-                            converted += ch;
+                        if (greekToNum[sub] !== undefined) {
+                            word += greekToNum[sub];
                         } else {
-                            converted += ch;
+                            let num = parseInt(sub);
+                            if (num >= 1 && num <= 32 && numToLetter[sub]) {
+                                word += numToLetter[sub];
+                            } else if (!isNaN(num)) {
+                                word += num;
+                            } else {
+                                word += sub;
+                            }
                         }
                     }
-                    words.push(converted);
                 }
-
-                out.push(words.join(' '));
+            } else {
+                let numbers = part.split('_');
+                for (let n of numbers) {
+                    let num = parseInt(n);
+                    if (num >= 1 && num <= 32 && numToLetter[n]) {
+                        word += numToLetter[n];
+                    } else if (!isNaN(num)) {
+                        word += num;
+                    } else {
+                        word += n;
+                    }
+                }
             }
-
-            return { error: false, result: out.join('\n') };
+            
+            result.push(word);
         }
+        
+        return result.join(' ');
+    }
 
-        // ==============================================
-        // تبدیل خودکار (تشخیص)
-        // ==============================================
-        function autoConvert() {
-            const raw = inputBox.value;
-            if (!raw.trim()) {
-                outputDiv.textContent = 'نتیجه اینجا نمایش داده می‌شود...';
-                outputDiv.className = 'result-content empty';
-                return;
+    function convertLine(line) {
+        if (line.trim() === '') return line;
+        
+        let trimmed = line.trim();
+        let engVersion = p2e(trimmed);
+        
+        if (/[a-zA-Z]/.test(line)) {
+            showErrorToast('فقط حروف فارسی مجاز است');
+            return null;
+        }
+        
+        if (/^[0-9_•|]+$/.test(engVersion) || /[•]/.test(engVersion) || /[_]/.test(engVersion) || /[|]/.test(engVersion)) {
+            return codeToText(line);
+        }
+        
+        if (/^\d+$/.test(engVersion)) {
+            let num = parseInt(engVersion);
+            if (num >= 1 && num <= 32 && numToLetter[engVersion]) {
+                return numToLetter[engVersion];
             }
+            return engVersion;
+        }
+        
+        return textToCode(line);
+    }
 
-            if (/[a-zA-Z]/.test(raw)) {
-                outputDiv.textContent = '❌ فقط متن فارسی مجاز است';
-                outputDiv.className = 'result-content error';
-                showToast('❌ فقط فارسی', 'error');
-                return;
+    function convertFullText(input) {
+        let lines = input.split(/\r?\n/);
+        let convertedLines = [];
+        let hasError = false;
+        
+        for (let line of lines) {
+            let result = convertLine(line);
+            if (result === null) {
+                hasError = true;
+                convertedLines.push(line);
+            } else {
+                convertedLines.push(result);
             }
+        }
+        
+        if (hasError) {
+            return null;
+        }
+        return convertedLines.join('\n');
+    }
 
-            const hasDigits = /\d/.test(raw);
-            const hasPersian = /[ا-ی]/.test(raw);
+    // ==============================================
+    // رویدادها
+    // ==============================================
+    const inputBox = document.getElementById('inputBox');
+    const outputDiv = document.getElementById('outputText');
+    const resultBox = document.getElementById('resultBox');
+    let lastValue = '';
+    let lastResult = '';
 
-            let result;
+    function update() {
+        let rawText = inputBox.value;
+        
+        if (/[a-zA-Z]/.test(rawText) && !/[a-zA-Z]/.test(lastValue)) {
+            showErrorToast('فقط حروف فارسی مجاز است');
+            let newText = rawText.replace(/[a-zA-Z]/g, '');
+            inputBox.value = newText;
+            rawText = newText;
+            inputBox.blur();
+        }
+        
+        lastValue = inputBox.value;
+        
+        if (rawText === '') {
+            outputDiv.innerText = '—';
+            outputDiv.setAttribute('data-error', 'false');
+            return;
+        }
+        
+        let result = convertFullText(rawText);
+        if (result === null) {
+            outputDiv.innerText = '—';
+            outputDiv.setAttribute('data-error', 'true');
+            return;
+        }
+        
+        if (result !== lastResult && result !== '—' && !result.includes('❌')) {
+            conversionCount++;
+            let short = result.length > 30 ? result.slice(0, 30) + '...' : result;
+            historyLog = `${conversionCount}. ${short}\n` + (historyLog || '').split('\n').slice(0, 4).join('\n');
+            lastResult = result;
+        }
+        
+        outputDiv.innerText = result;
+        outputDiv.setAttribute('dir', 'ltr');
+        
+        if (result.includes('❌')) {
+            outputDiv.setAttribute('data-error', 'true');
+        } else {
+            outputDiv.setAttribute('data-error', 'false');
+        }
+    }
+    
+    inputBox.addEventListener('input', update);
 
-            // اگه فقط عدد بود یا کد مخفی بود (بدون فارسی) → دیکود
-            if (ha
+    resultBox.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        let txt = outputDiv.innerText;
+        let isErr = outputDiv.getAttribute('data-error') === 'true';
+        
+        if (!txt || txt === '—' || isErr || txt.includes('❌')) {
+            showErrorToast('چیزی برای کپی نیست');
+            return;
+        }
+        
+        inputBox.blur();
+        
+        setTimeout(async () => {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                try {
+                    await navigator.clipboard.writeText(txt);
+                    showSuccessToast('کپی شد');
+                    resultBox.style.transform = 'scale(0.97)';
+                    setTimeout(() => resultBox.style.transform = '', 150);
+                    return;
+                } catch (err) {}
+            }
+            try {
+                const textarea = document.createElement('textarea');
+                textarea.value = txt;
+                textarea.style.position = 'fixed';
+                textarea.style.top = '-9999px';
+                document.body.appendChild(textarea);
+                textarea.select();
+                const success = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                if (success) {
+                    showSuccessToast('کپی شد');
+                    resultBox.style.transform = 'scale(0.97)';
+                    setTimeout(() => resultBox.style.transform = '', 150);
+                } else {
+                    showErrorToast('کپی نشد');
+                }
+            } catch (err) {
+                showErrorToast('کپی نشد');
+            }
+        }, 50);
+    });
+
+    inputBox.value = '';
+    update();
+    
+    function autoResizeTextarea() {
+        inputBox.style.height = 'auto';
+        let newHeight = Math.min(inputBox.scrollHeight, 180);
+        inputBox.style.height = newHeight + 'px';
+    }
+    inputBox.addEventListener('input', autoResizeTextarea);
+    autoResizeTextarea();
+</script>
+</body>
+</html>
