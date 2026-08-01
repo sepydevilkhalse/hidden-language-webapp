@@ -43,7 +43,6 @@
             -ms-overflow-style: none;
         }
 
-        /* ===== ستاره‌ها ===== */
         .stars {
             position: fixed;
             top: 0;
@@ -224,17 +223,17 @@
             position: relative;
         }
         
+        textarea::placeholder {
+            color: #4a4a6a;
+            font-size: 0.85rem;
+            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+        }
+        
         textarea:focus {
             border-color: rgba(139, 92, 246, 0.3);
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.04);
             background: rgba(15, 12, 30, 0.7);
             transform: scale(1.005);
-        }
-        
-        textarea::placeholder {
-            color: #4a4a6a;
-            font-size: 0.85rem;
-            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
         }
         
         .result-area {
@@ -397,9 +396,7 @@
             border-color: rgba(139, 92, 246, 0.2);
         }
 
-        /* ============================================================ */
-        /* ===== مودال با انیمیشن فوق‌نرم و بدون اسکرول ===== */
-        /* ============================================================ */
+        /* ===== مودال بدون دکمه بستن اضافی ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -476,7 +473,6 @@
             animation: breatheGlow 4s ease-in-out infinite;
         }
 
-        /* حالت بسته شدن (انیمیشن برگشت) */
         .modal-overlay.closing {
             transition: 
                 opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -515,6 +511,7 @@
         .modal-body::-webkit-scrollbar {
             display: none;
         }
+        
         .modal-close {
             position: absolute;
             top: 12px;
@@ -533,6 +530,7 @@
             transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), color 0.28s cubic-bezier(0.22, 1, 0.36, 1), background 0.28s cubic-bezier(0.22, 1, 0.36, 1);
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            z-index: 10;
         }
         .modal-close:active {
             transform: scale(0.88);
@@ -540,24 +538,7 @@
             background: rgba(139, 92, 246, 0.08);
         }
 
-        .btn-close-modal {
-            margin-top: 16px;
-            padding: 10px 30px;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.1));
-            color: #c4b5fd;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-            font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
-        }
-        .btn-close-modal:active {
-            transform: scale(0.93);
-        }
-
-        /* ============================================================ */
+        /* ===== دکمه بستن حذف شد ===== */
 
         .toast {
             position: fixed;
@@ -635,7 +616,6 @@
             to { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
-        /* هیچ اسکرول باری در کل صفحه نمایش داده نشود */
         ::-webkit-scrollbar {
             display: none;
         }
@@ -672,9 +652,6 @@
         <button class="modal-close" id="modalCloseBtn" aria-label="بستن">✕</button>
         <div class="modal-title" id="modalTitle">عنوان</div>
         <div class="modal-body" id="modalBody">متن</div>
-        <div style="text-align: center; margin-top: 16px;">
-            <button class="btn-close-modal" onclick="closeModal()">بستن</button>
-        </div>
     </div>
 </div>
 
@@ -691,7 +668,7 @@
 
         <div class="input-area">
             <label>📝 بنویس... (فقط حروف فارسی)</label>
-            <textarea id="inputBox" rows="3" placeholder="مثال:&#10;سلام ۱۲۳ خوبی&#10;یا&#10;15_27_1_28•|α_β_γ|•9_30_2_32"></textarea>
+            <textarea id="inputBox" rows="3" placeholder="مثال:&#10;سلام خوبی 🥺&#10;یا&#10;15_27_1_28•9_30_2_32"></textarea>
         </div>
 
         <div class="result-area glass-card" id="resultBox" style="padding: 12px 16px; margin: 0;">
@@ -1137,7 +1114,6 @@ function showModal(title, body) {
     
     overlay.classList.remove('closing');
     
-    // نمایش با requestAnimationFrame برای نرم‌تر شدن
     requestAnimationFrame(() => {
         overlay.classList.add('show');
         isModalOpen = true;
@@ -1185,7 +1161,7 @@ function showAbout() {
 
 ✅ تبدیل فارسی ↔ کد مخفی
 ✅ تشخیص خودکار
-✅ پشتیبانی از اعداد یونانی (π برای عدد ۶)
+✅ پشتیبانی از اعداد یونانی
 ✅ تاریخچه و آمار`);
 }
 
@@ -1195,7 +1171,7 @@ let historyLog = '';
 function showStats() {
     showModal('📊 آمار من', 
 `📝 تعداد تبدیل‌ها: ${conversionCount}
-📆 تاریخ عضویت: ۱۴۰۴/۰۳/۱۶`);
+📆 تاریخ عضویت: ۱۴۰۰/۰۳/۲۴`);
 }
 
 function showHistory() {
