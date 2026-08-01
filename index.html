@@ -568,7 +568,7 @@
             background: rgba(139, 92, 246, 0.08);
         }
 
-        /* ===== نوارهای اطلاع‌رسانی از بالا ===== */
+        /* ===== نوارهای اطلاع‌رسانی فوق‌نرم ===== */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -599,13 +599,13 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
             pointer-events: auto;
-            transform: translateY(-20px) scale(0.92);
+            transform: translateY(-15px) scale(0.97);
             opacity: 0;
             visibility: hidden;
             transition: 
-                transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-                visibility 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+                transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0.38s cubic-bezier(0.22, 1, 0.36, 1);
             will-change: transform, opacity;
         }
         .toast.show {
@@ -616,7 +616,7 @@
         .toast.hide {
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-20px) scale(0.92);
+            transform: translateY(-15px) scale(0.97);
         }
 
         .toast-success {
@@ -809,19 +809,19 @@ function htmlEscape(text) {
 function validateCode(text) {
     let errors = [];
     if ((text.match(/\|/g) || []).length % 2 !== 0) {
-        errors.push("❌ تعداد | باید زوج باشد");
+        errors.push("تعداد | باید زوج باشد");
     }
     if (text.includes('||')) {
-        errors.push("❌ | خالی مجاز نیست");
+        errors.push("| خالی مجاز نیست");
     }
     if (text.includes('__')) {
-        errors.push("❌ __ مجاز نیست");
+        errors.push("__ مجاز نیست");
     }
     if (text.startsWith('_') || text.endsWith('_')) {
-        errors.push("❌ _ در ابتدا یا انتها مجاز نیست");
+        errors.push("_ در ابتدا یا انتها مجاز نیست");
     }
     if (text.includes('••')) {
-        errors.push("❌ •• مجاز نیست");
+        errors.push("•• مجاز نیست");
     }
     let inBracket = false;
     let bracketContent = "";
@@ -831,7 +831,7 @@ function validateCode(text) {
                 let tokens = bracketContent.split('_');
                 for (let token of tokens) {
                     if (token && !VALID_GREEK.has(token)) {
-                        errors.push(`❌ کاراکتر نامعتبر در |: ${token}`);
+                        errors.push(`کاراکتر نامعتبر در |: ${token}`);
                     }
                 }
                 bracketContent = "";
@@ -848,7 +848,7 @@ function validateCode(text) {
     let nums = outsideBracket.match(/\d+/g) || [];
     for (let num of nums) {
         if (parseInt(num) > 32) {
-            errors.push(`❌ عدد ${num} معتبر نیست (بزرگتر از ۳۲)`);
+            errors.push(`عدد ${num} معتبر نیست (بزرگتر از ۳۲)`);
         }
     }
     return errors;
@@ -1200,7 +1200,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ==============================================
-// ===== نوارهای اطلاع‌رسانی از بالا =====
+// ===== نوارهای اطلاع‌رسانی فوق‌نرم =====
 // ==============================================
 let toastTimeout = null;
 
@@ -1216,7 +1216,7 @@ function showToast(message, type = 'success') {
                 existingToast.remove();
             }
             createAndShowToast(message, type);
-        }, 300);
+        }, 380);
     } else {
         createAndShowToast(message, type);
     }
@@ -1251,7 +1251,7 @@ function createAndShowToast(message, type) {
                 toast.remove();
             }
             toastTimeout = null;
-        }, 300);
+        }, 380);
     }, 2500);
 }
 
@@ -1266,7 +1266,7 @@ function clearAll() {
     const hasOutput = outputDiv.innerText !== '—' && outputDiv.innerText.trim() !== '';
     
     if (!hasInput && !hasOutput) {
-        showToast('❌ چیزی برای پاکسازی نیست', 'error');
+        showToast('چیزی برای پاکسازی نیست', 'error');
         return;
     }
     
@@ -1275,7 +1275,7 @@ function clearAll() {
     outputDiv.setAttribute('data-error', 'false');
     outputDiv.setAttribute('dir', 'rtl');
     
-    showToast('✅ پاکسازی تکمیل شد', 'success');
+    showToast('پاکسازی تکمیل شد', 'success');
 }
 
 // ==============================================
@@ -1367,7 +1367,7 @@ function update() {
     let rawText = inputBox.value;
     
     if (/[a-zA-Z]/.test(rawText) && !/[a-zA-Z]/.test(lastValue)) {
-        showToast('❌ فقط حروف فارسی مجاز است', 'error');
+        showToast('فقط حروف فارسی مجاز است', 'error');
         let newText = rawText.replace(/[a-zA-Z]/g, '');
         inputBox.value = newText;
         rawText = newText;
@@ -1405,9 +1405,8 @@ function update() {
         outputDiv.innerText = '—';
         outputDiv.setAttribute('data-error', 'true');
         outputDiv.setAttribute('dir', 'rtl');
-        // نمایش خطا فقط در نوار
         const errorMsg = result.includes('❌') ? result.replace(/❌/g, '').trim() : 'خطا در تبدیل';
-        showToast(`❌ ${errorMsg}`, 'error');
+        showToast(errorMsg, 'error');
         return;
     }
     
@@ -1427,7 +1426,7 @@ resultBox.addEventListener('click', async function(e) {
     let isErr = outputDiv.getAttribute('data-error') === 'true';
     
     if (!txt || txt === '—' || isErr || txt.includes('❌') || txt === '') {
-        showToast('❌ چیزی برای کپی نیست', 'error');
+        showToast('چیزی برای کپی نیست', 'error');
         vibrate();
         return;
     }
@@ -1436,7 +1435,7 @@ resultBox.addEventListener('click', async function(e) {
     
     try {
         await navigator.clipboard.writeText(txt);
-        showToast('✅ کپی شد', 'success');
+        showToast('کپی شد', 'success');
         resultBox.style.transform = 'scale(0.97)';
         setTimeout(() => resultBox.style.transform = '', 150);
         vibrate();
@@ -1450,12 +1449,12 @@ resultBox.addEventListener('click', async function(e) {
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-            showToast('✅ کپی شد', 'success');
+            showToast('کپی شد', 'success');
             resultBox.style.transform = 'scale(0.97)';
             setTimeout(() => resultBox.style.transform = '', 150);
             vibrate();
         } catch (err2) {
-            showToast('❌ کپی نشد', 'error');
+            showToast('کپی نشد', 'error');
             vibrate();
         }
     }
