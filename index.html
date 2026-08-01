@@ -724,7 +724,7 @@
 
         <div class="btn-clear-wrapper">
             <button class="btn-clear" onclick="clearAll()">
-                <span>✕</span> پاکسازی
+                <span>✕</span> پاکسازی <span>✕</span>
             </button>
         </div>
 
@@ -1092,9 +1092,13 @@ function decode(text) {
 // ==============================================
 function detectConversionType(text) {
     text = cleanText(text);
+    
+    // اگر حروف فارسی داشت → encode
     if (/[ا-ی]/.test(text)) {
         return 'encode';
     }
+    
+    // اگر ساختار کد داشت → decode
     if (/^[0-9_•|α-ωοπϛΑ-ΩΟϚ]+$/.test(text)) {
         return 'decode';
     }
@@ -1107,7 +1111,9 @@ function detectConversionType(text) {
     if (text.includes('_') && /\d/.test(text)) {
         return 'decode';
     }
-    return 'encode';
+    
+    // هیچکدام نبود → متن انگلیسی یا بی‌معنی → بدون تغییر برگردون
+    return 'pass';
 }
 
 // ==============================================
@@ -1364,13 +1370,23 @@ function vibrate() {
 function update() {
     let rawText = inputBox.value;
     
-    if (/[a-zA-Z]/.test(rawText) && !/[a-zA-Z]/.test(lastValue)) {
-        showToast('فقط حروف فارسی مجاز است', 'error');
-        let newText = rawText.replace(/[a-zA-Z]/g, '');
-        inputBox.value = newText;
-        rawText = newText;
-        inputBox.blur();
-        vibrate();
+    // اگر حرف انگلیسی داشت، بدون تغییر بفرست (فقط حذف نکن)
+    const hasEnglish = /[a-zA-Z]/.test(rawText);
+    const hasPersian = /[ا-ی]/.test(rawText);
+    
+    // اگر حروف فارسی نداشت و انگلیسی داشت → بدون تغییر برگردون
+    if (!hasPersian && hasEnglish) {
+        outputDiv.innerText = rawText;
+        outputDiv.setAttribute('data-error', 'false');
+        outputDiv.setAttribute('dir', 'ltr');
+        return;
+    }
+    
+    // اگر فقط انگلیسی بود (حتی بدون فارسی) → بدون تغییر
+    if (hasEnglish && !hasPersian) {
+        outputDiv.innerText = rawText;
+        outputDiv.setAttribute('data-error', 'false');
+        outputDiv.setAttribute('dir', 'ltr');
         return;
     }
     
@@ -1388,8 +1404,11 @@ function update() {
     
     if (convType === 'encode') {
         result = encode(rawText);
-    } else {
+    } else if (convType === 'decode') {
         result = decode(rawText);
+    } else {
+        // pass - بدون تغییر
+        result = rawText;
     }
     
     if (result !== lastResult && result !== '—' && result !== '' && !result.includes('❌')) {
