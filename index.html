@@ -18,17 +18,29 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+        }
+
         body {
             background: linear-gradient(135deg, #0f0c29, #1a1a3e, #16213e);
             font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             position: relative;
+            overflow-y: auto;
             overflow-x: hidden;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        body {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         /* ===== ستاره‌ها ===== */
@@ -386,7 +398,7 @@
         }
 
         /* ============================================================ */
-        /* ===== مودال با انیمیشن حرفه‌ای ===== */
+        /* ===== مودال با انیمیشن فوق‌نرم و بدون اسکرول ===== */
         /* ============================================================ */
         .modal-overlay {
             position: fixed;
@@ -405,10 +417,11 @@
             backdrop-filter: blur(0px);
             -webkit-backdrop-filter: blur(0px);
             transition: 
-                opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-                background 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-                backdrop-filter 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-                visibility 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+                opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                backdrop-filter 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 20px;
         }
         .modal-overlay.show {
             visibility: visible;
@@ -426,20 +439,26 @@
             border-radius: 36px;
             padding: 28px 32px;
             max-width: 400px;
-            width: 90%;
+            width: 100%;
             border: 1px solid rgba(139, 92, 246, 0.15);
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-            transform: scale(0.92) translateY(10px);
+            transform: translateY(20px) scale(0.92);
             opacity: 0;
             transition: 
-                transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+                transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
             max-height: 80vh;
             overflow-y: auto;
             position: relative;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
+        .modal-box::-webkit-scrollbar {
+            display: none;
+        }
+
         .modal-overlay.show .modal-box {
-            transform: scale(1) translateY(0);
+            transform: translateY(0) scale(1);
             opacity: 1;
         }
 
@@ -457,19 +476,19 @@
             animation: breatheGlow 4s ease-in-out infinite;
         }
 
-        /* حالت بسته شدن (برای انیمیشن برگشت) */
+        /* حالت بسته شدن (انیمیشن برگشت) */
         .modal-overlay.closing {
             transition: 
-                opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-                background 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-                backdrop-filter 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+                opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                backdrop-filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .modal-overlay.closing .modal-box {
-            transform: scale(0.92) translateY(10px);
+            transform: translateY(20px) scale(0.92);
             opacity: 0;
             transition: 
-                transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+                transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .modal-title {
@@ -488,6 +507,13 @@
             text-align: center;
             white-space: pre-wrap;
             font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
+            overflow-y: auto;
+            max-height: 50vh;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .modal-body::-webkit-scrollbar {
+            display: none;
         }
         .modal-close {
             position: absolute;
@@ -609,16 +635,13 @@
             to { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
+        /* هیچ اسکرول باری در کل صفحه نمایش داده نشود */
         ::-webkit-scrollbar {
-            width: 3px;
+            display: none;
         }
-        ::-webkit-scrollbar-track {
-            background: rgba(10, 8, 28, 0.2);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.2);
-            border-radius: 10px;
+        * {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         @media (max-width: 480px) {
@@ -1112,45 +1135,40 @@ function showModal(title, body) {
     document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalBody').textContent = body;
     
-    // حذف کلاس closing اگر وجود داشت
     overlay.classList.remove('closing');
     
-    // نمایش مودال
-    overlay.classList.add('show');
-    isModalOpen = true;
-    document.body.style.overflow = 'hidden';
+    // نمایش با requestAnimationFrame برای نرم‌تر شدن
+    requestAnimationFrame(() => {
+        overlay.classList.add('show');
+        isModalOpen = true;
+        document.body.style.overflow = 'hidden';
+    });
 }
 
 function closeModal() {
     const overlay = document.getElementById('modalOverlay');
     
-    // اگر در حال بسته شدن است، کاری نکن
     if (overlay.classList.contains('closing')) return;
     
-    // اضافه کردن کلاس closing برای انیمیشن برگشت
     overlay.classList.add('closing');
     
-    // بعد از انیمیشن، مخفی کن
     if (modalCloseTimer) clearTimeout(modalCloseTimer);
     modalCloseTimer = setTimeout(() => {
         overlay.classList.remove('show', 'closing');
         isModalOpen = false;
         document.body.style.overflow = '';
         modalCloseTimer = null;
-    }, 300); // دقیقاً همون مدت انیمیشن
+    }, 400);
 }
 
-// کلیک روی overlay
 document.getElementById('modalOverlay').addEventListener('click', function(e) {
     if (e.target === this && isModalOpen) {
         closeModal();
     }
 });
 
-// دکمه بستن
 document.getElementById('modalCloseBtn').addEventListener('click', closeModal);
 
-// دکمه ESC
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && isModalOpen) {
         closeModal();
