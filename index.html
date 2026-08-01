@@ -31,7 +31,6 @@
             overflow-x: hidden;
         }
 
-        /* ===== ستاره‌های چشمک‌زن ===== */
         .stars {
             position: fixed;
             top: 0;
@@ -55,7 +54,6 @@
             100% { opacity: 1; transform: scale(1.3); }
         }
 
-        /* ===== ذرات شناور ===== */
         .floating-particles {
             position: fixed;
             top: 0;
@@ -101,7 +99,6 @@
             position: relative;
         }
 
-        /* ===== نور بنفش پاستیلی دور کارت‌ها ===== */
         .glass-card::before {
             content: '';
             position: absolute;
@@ -342,7 +339,6 @@
             50% { background: rgba(30, 27, 46, 0.5); border-color: rgba(139, 92, 246, 0.15); }
         }
 
-        /* ===== دکمه‌ها ===== */
         .btn-row {
             display: flex;
             gap: 8px;
@@ -394,7 +390,6 @@
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.35), rgba(99, 102, 241, 0.2));
         }
 
-        /* ===== مودال ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -585,13 +580,9 @@
 </head>
 <body>
 
-<!-- ===== ستاره‌ها ===== -->
 <div class="stars" id="stars"></div>
-
-<!-- ===== ذرات شناور ===== -->
 <div class="floating-particles" id="floatingParticles"></div>
 
-<!-- ===== مودال ===== -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal-box">
         <button class="modal-close" onclick="closeModal()">✕</button>
@@ -629,7 +620,6 @@
         </div>
     </div>
 
-    <!-- ===== دکمه‌ها ===== -->
     <div class="glass-card" style="padding: 12px 16px;">
         <div class="btn-row">
             <button class="btn btn-primary" onclick="showAbout()">ℹ️ درباره</button>
@@ -640,547 +630,700 @@
 </div>
 
 <script>
-    // ==============================================
-    // ستاره‌ها
-    // ==============================================
-    function createStars() {
-        const container = document.getElementById('stars');
-        const count = 150;
-        for (let i = 0; i < count; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = Math.random() * 3 + 1;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.setProperty('--duration', (Math.random() * 4 + 2) + 's');
-            star.style.animationDelay = (Math.random() * 6) + 's';
-            container.appendChild(star);
+// ==============================================
+// دیکشنری‌ها (دقیقاً برابر با ربات)
+// ==============================================
+const letterToNum = {
+    'ا': '1', 'آ': '1', 'ب': '2', 'پ': '3', 'ت': '4', 'ث': '5',
+    'ج': '6', 'چ': '7', 'ح': '8', 'خ': '9', 'د': '10', 'ذ': '11',
+    'ر': '12', 'ز': '13', 'ژ': '14', 'س': '15', 'ش': '16', 'ص': '17',
+    'ض': '18', 'ط': '19', 'ظ': '20', 'ع': '21', 'غ': '22', 'ف': '23',
+    'ق': '24', 'ک': '25', 'گ': '26', 'ل': '27', 'م': '28', 'ن': '29',
+    'و': '30', 'ه': '31', 'ی': '32'
+};
+
+const numToLetter = {};
+for (let key in letterToNum) {
+    let val = letterToNum[key];
+    if (val === '1') {
+        numToLetter[val] = 'ا';
+    } else if (!numToLetter[val]) {
+        numToLetter[val] = key;
+    }
+}
+
+// عدد ۶ به π (مثل ربات)
+const numberToGreek = {
+    '0': 'ο', '1': 'α', '2': 'β', '3': 'γ', '4': 'δ',
+    '5': 'ε', '6': 'π', '7': 'ζ', '8': 'η', '9': 'θ'
+};
+
+const greekToNum = {
+    'ο': '0', 'α': '1', 'β': '2', 'γ': '3', 'δ': '4',
+    'ε': '5', 'π': '6', 'ζ': '7', 'η': '8', 'θ': '9'
+};
+
+const VALID_GREEK = new Set(Object.keys(greekToNum));
+
+// ==============================================
+// تبدیل‌ها و پاکسازی (clean_text مثل ربات)
+// ==============================================
+function p2e(str) {
+    const map = { '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9' };
+    return str.replace(/[۰-۹]/g, m => map[m]);
+}
+
+function cleanText(text) {
+    if (!text) return text;
+    
+    // تبدیل عربی به فارسی
+    text = text.replace(/ي/g, 'ی').replace(/ك/g, 'ک').replace(/ة/g, 'ه');
+    
+    // حذف کشیده
+    text = text.replace(/ـ/g, '');
+    
+    // حذف Zero Width
+    text = text.replace(/[\u200c\u200d\u200b\u2060\ufeff]/g, '');
+    
+    // حذف RTL/LTR Marks
+    text = text.replace(/[\u200e\u200f\u202a\u202b\u202c\u202d\u202e]/g, '');
+    
+    // تبدیل تب به فاصله
+    text = text.replace(/\t/g, ' ');
+    
+    // تبدیل چند فاصله به یکی
+    text = text.replace(/ +/g, ' ');
+    
+    // حذف فاصله اول و آخر
+    text = text.trim();
+    
+    // تبدیل اعداد فارسی به انگلیسی
+    text = p2e(text);
+    
+    return text;
+}
+
+// ==============================================
+// HTML Escape (مثل ربات)
+// ==============================================
+function htmlEscape(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ==============================================
+// اعتبارسنجی کد مخفی (مثل ربات)
+// ==============================================
+function validateCode(text) {
+    let errors = [];
+    
+    if ((text.match(/\|/g) || []).length % 2 !== 0) {
+        errors.push("❌ تعداد | باید زوج باشد");
+    }
+    
+    if (text.includes('||')) {
+        errors.push("❌ | خالی مجاز نیست");
+    }
+    
+    if (text.includes('__')) {
+        errors.push("❌ __ مجاز نیست");
+    }
+    
+    if (text.startsWith('_') || text.endsWith('_')) {
+        errors.push("❌ _ در ابتدا یا انتها مجاز نیست");
+    }
+    
+    if (text.includes('••')) {
+        errors.push("❌ •• مجاز نیست");
+    }
+    
+    let inBracket = false;
+    let bracketContent = "";
+    for (let ch of text) {
+        if (ch === '|') {
+            if (inBracket) {
+                let tokens = bracketContent.split('_');
+                for (let token of tokens) {
+                    if (token && !VALID_GREEK.has(token)) {
+                        errors.push(`❌ کاراکتر نامعتبر در |: ${token}`);
+                    }
+                }
+                bracketContent = "";
+                inBracket = false;
+            } else {
+                inBracket = true;
+                bracketContent = "";
+            }
+        } else if (inBracket) {
+            bracketContent += ch;
         }
     }
-    createStars();
-
-    // ==============================================
-    // ذرات شناور
-    // ==============================================
-    function createFloatingParticles() {
-        const container = document.getElementById('floatingParticles');
-        const count = 15;
-        for (let i = 0; i < count; i++) {
-            const p = document.createElement('div');
-            p.className = 'f-particle';
-            const size = Math.random() * 100 + 50;
-            p.style.width = size + 'px';
-            p.style.height = size + 'px';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.top = Math.random() * 100 + '%';
-            p.style.setProperty('--duration', (Math.random() * 8 + 6) + 's');
-            p.style.animationDelay = (Math.random() * 5) + 's';
-            p.style.opacity = Math.random() * 0.08 + 0.02;
-            container.appendChild(p);
+    
+    let outsideBracket = text.replace(/\|[^|]*\|/g, '');
+    let nums = outsideBracket.match(/\d+/g) || [];
+    for (let num of nums) {
+        if (parseInt(num) > 32) {
+            errors.push(`❌ عدد ${num} معتبر نیست (بزرگتر از ۳۲)`);
         }
     }
-    createFloatingParticles();
+    
+    return errors;
+}
 
-    // ==============================================
-    // مودال
-    // ==============================================
-    function showModal(title, body) {
-        document.getElementById('modalTitle').textContent = title;
-        document.getElementById('modalBody').textContent = body;
-        document.getElementById('modalOverlay').classList.add('show');
-        document.body.style.overflow = 'hidden';
+// ==============================================
+// Tokenizer (مثل ربات)
+// ==============================================
+function tokenize(text) {
+    let tokens = [];
+    let i = 0;
+    
+    // تشخیص ایموجی‌ها
+    const emojiRegex = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}]/u;
+    
+    while (i < text.length) {
+        // بررسی ایموجی
+        let match = text.substring(i).match(emojiRegex);
+        if (match && match.index === 0) {
+            tokens.push(['EMOJI', match[0]]);
+            i += match[0].length;
+            continue;
+        }
+        
+        // عدد
+        if (text[i] >= '0' && text[i] <= '9') {
+            let num = '';
+            while (i < text.length && text[i] >= '0' && text[i] <= '9') {
+                num += text[i];
+                i++;
+            }
+            tokens.push(['NUMBER', num]);
+            continue;
+        }
+        
+        // حرف فارسی
+        if (letterToNum[text[i]] || text[i] === 'آ') {
+            tokens.push(['PERSIAN', text[i]]);
+            i++;
+            continue;
+        }
+        
+        // جداکننده‌ها
+        if (['•', '|', '_', ' '].includes(text[i])) {
+            tokens.push(['SEPARATOR', text[i]]);
+            i++;
+            continue;
+        }
+        
+        // بقیه کاراکترها
+        tokens.push(['OTHER', text[i]]);
+        i++;
     }
+    
+    return tokens;
+}
 
-    function closeModal() {
-        document.getElementById('modalOverlay').classList.remove('show');
-        document.body.style.overflow = '';
+// ==============================================
+// تبدیل عدد به یونانی (مثل ربات)
+// ==============================================
+function convertNumberToGreek(numStr) {
+    let result = [];
+    for (let ch of numStr) {
+        if (ch >= '0' && ch <= '9') {
+            result.push(numberToGreek[ch] || ch);
+        } else {
+            result.push(ch);
+        }
     }
+    return result.join('_');
+}
 
-    document.getElementById('modalOverlay').addEventListener('click', function(e) {
-        if (e.target === this) closeModal();
-    });
+// ==============================================
+// Encode (دقیقاً مثل ربات)
+// ==============================================
+function encode(text) {
+    try {
+        text = cleanText(text);
+        let lines = text.split('\n');
+        let resultLines = [];
+        
+        for (let line of lines) {
+            if (!line.trim()) {
+                resultLines.push('');
+                continue;
+            }
+            
+            let tokens = tokenize(line);
+            let outputParts = [];
+            let currentPart = [];
+            let greekBuffer = [];
+            
+            for (let [tokenType, tokenValue] of tokens) {
+                if (tokenType === 'PERSIAN') {
+                    if (greekBuffer.length > 0) {
+                        currentPart.push('|' + greekBuffer.join('_') + '|');
+                        greekBuffer = [];
+                    }
+                    currentPart.push(letterToNum[tokenValue]);
+                } else if (tokenType === 'NUMBER') {
+                    greekBuffer.push(convertNumberToGreek(tokenValue));
+                } else if (tokenType === 'SEPARATOR') {
+                    if (tokenValue === ' ') {
+                        if (greekBuffer.length > 0) {
+                            currentPart.push('|' + greekBuffer.join('_') + '|');
+                            greekBuffer = [];
+                        }
+                        if (currentPart.length > 0) {
+                            outputParts.push(currentPart.join('_'));
+                            currentPart = [];
+                        }
+                        outputParts.push('•');
+                    } else {
+                        if (greekBuffer.length > 0) {
+                            currentPart.push('|' + greekBuffer.join('_') + '|');
+                            greekBuffer = [];
+                        }
+                        if (currentPart.length > 0) {
+                            outputParts.push(currentPart.join('_'));
+                            currentPart = [];
+                        }
+                        outputParts.push(tokenValue);
+                    }
+                } else if (tokenType === 'EMOJI') {
+                    if (greekBuffer.length > 0) {
+                        currentPart.push('|' + greekBuffer.join('_') + '|');
+                        greekBuffer = [];
+                    }
+                    if (currentPart.length > 0) {
+                        outputParts.push(currentPart.join('_'));
+                        currentPart = [];
+                    }
+                    outputParts.push(tokenValue);
+                } else { // OTHER
+                    if (greekBuffer.length > 0) {
+                        currentPart.push('|' + greekBuffer.join('_') + '|');
+                        greekBuffer = [];
+                    }
+                    if (currentPart.length > 0) {
+                        outputParts.push(currentPart.join('_'));
+                        currentPart = [];
+                    }
+                    outputParts.push(tokenValue);
+                }
+            }
+            
+            if (greekBuffer.length > 0) {
+                currentPart.push('|' + greekBuffer.join('_') + '|');
+                greekBuffer = [];
+            }
+            if (currentPart.length > 0) {
+                outputParts.push(currentPart.join('_'));
+            }
+            
+            resultLines.push(outputParts.join(''));
+        }
+        
+        return htmlEscape(resultLines.join('\n'));
+    } catch (e) {
+        console.error('Encode error:', e);
+        return '❌ خطا در تبدیل';
+    }
+}
 
-    // ==============================================
-    // دکمه‌ها
-    // ==============================================
-    function showAbout() {
-        showModal('ℹ️ درباره ربات', 
-`🤖 نسخه: 3.34
+// ==============================================
+// Decode (دقیقاً مثل ربات)
+// ==============================================
+function decode(text) {
+    try {
+        text = cleanText(text);
+        
+        let errors = validateCode(text);
+        if (errors.length > 0) {
+            return htmlEscape(errors.slice(0, 3).join('\n'));
+        }
+        
+        let lines = text.split('\n');
+        let finalLines = [];
+        
+        for (let line of lines) {
+            if (!line.trim()) {
+                finalLines.push('');
+                continue;
+            }
+            
+            let tokens = tokenize(line);
+            let resultWords = [];
+            let currentWord = '';
+            let inBracket = false;
+            let bracketContent = '';
+            
+            for (let [tokenType, tokenValue] of tokens) {
+                if (tokenType === 'SEPARATOR' && tokenValue === '|') {
+                    if (inBracket) {
+                        inBracket = false;
+                        let greekTokens = bracketContent.split('_');
+                        for (let gt of greekTokens) {
+                            if (greekToNum[gt] !== undefined) {
+                                currentWord += greekToNum[gt];
+                            } else {
+                                return htmlEscape(`❌ کاراکتر نامعتبر در |: ${gt}`);
+                            }
+                        }
+                        bracketContent = '';
+                    } else {
+                        inBracket = true;
+                        bracketContent = '';
+                    }
+                    continue;
+                }
+                
+                if (inBracket) {
+                    bracketContent += tokenValue;
+                    continue;
+                }
+                
+                if (tokenType === 'NUMBER') {
+                    let num = parseInt(tokenValue);
+                    if (num > 32) {
+                        return htmlEscape(`❌ عدد ${num} معتبر نیست (بزرگتر از ۳۲)`);
+                    }
+                    if (numToLetter[tokenValue]) {
+                        currentWord += numToLetter[tokenValue];
+                    } else {
+                        currentWord += tokenValue;
+                    }
+                } else if (tokenType === 'SEPARATOR') {
+                    if (tokenValue === '•') {
+                        if (currentWord) {
+                            resultWords.push(currentWord);
+                            currentWord = '';
+                        }
+                    }
+                } else if (tokenType === 'EMOJI') {
+                    if (currentWord) {
+                        resultWords.push(currentWord);
+                        currentWord = '';
+                    }
+                    resultWords.push(tokenValue);
+                } else if (tokenType === 'PERSIAN') {
+                    currentWord += tokenValue;
+                } else { // OTHER
+                    if (currentWord) {
+                        resultWords.push(currentWord);
+                        currentWord = '';
+                    }
+                    resultWords.push(tokenValue);
+                }
+            }
+            
+            if (currentWord) {
+                resultWords.push(currentWord);
+            }
+            
+            finalLines.push(resultWords.join(' '));
+        }
+        
+        return htmlEscape(finalLines.join('\n'));
+    } catch (e) {
+        console.error('Decode error:', e);
+        return '❌ خطا در تبدیل';
+    }
+}
+
+// ==============================================
+// تشخیص خودکار نوع ورودی (مثل ربات)
+// ==============================================
+function detectConversionType(text) {
+    text = cleanText(text);
+    
+    if (/[ا-ی]/.test(text)) {
+        return 'encode';
+    }
+    
+    if (/^[0-9_•|α-ωοπϛΑ-ΩΟϚ]+$/.test(text)) {
+        return 'decode';
+    }
+    
+    if (/[α-ωοπϛ]/.test(text) || /[Α-ΩΟϚ]/.test(text)) {
+        return 'decode';
+    }
+    
+    if (text.includes('•') || text.includes('|')) {
+        return 'decode';
+    }
+    
+    if (text.includes('_') && /\d/.test(text)) {
+        return 'decode';
+    }
+    
+    return 'encode';
+}
+
+// ==============================================
+// ستاره‌ها
+// ==============================================
+function createStars() {
+    const container = document.getElementById('stars');
+    const count = 150;
+    for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 3 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.setProperty('--duration', (Math.random() * 4 + 2) + 's');
+        star.style.animationDelay = (Math.random() * 6) + 's';
+        container.appendChild(star);
+    }
+}
+createStars();
+
+function createFloatingParticles() {
+    const container = document.getElementById('floatingParticles');
+    const count = 15;
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'f-particle';
+        const size = Math.random() * 100 + 50;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.setProperty('--duration', (Math.random() * 8 + 6) + 's');
+        p.style.animationDelay = (Math.random() * 5) + 's';
+        p.style.opacity = Math.random() * 0.08 + 0.02;
+        container.appendChild(p);
+    }
+}
+createFloatingParticles();
+
+// ==============================================
+// مودال
+// ==============================================
+function showModal(title, body) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').textContent = body;
+    document.getElementById('modalOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+
+// ==============================================
+// دکمه‌ها
+// ==============================================
+function showAbout() {
+    showModal('ℹ️ درباره ربات', 
+`🤖 نسخه: 3.3.4
 📅 1404/11/25
 
 ✅ تبدیل فارسی ↔ کد مخفی
 ✅ تشخیص خودکار
-✅ پشتیبانی از اعداد یونانی (ο, α, β, γ, ...)
+✅ پشتیبانی از اعداد یونانی (π برای عدد ۶)
 ✅ تاریخچه و آمار`);
-    }
+}
 
-    let conversionCount = 0;
+let conversionCount = 0;
+let historyLog = '';
 
-    function showStats() {
-        showModal('📊 آمار من', 
+function showStats() {
+    showModal('📊 آمار من', 
 `📝 تعداد تبدیل‌ها: ${conversionCount}
 📆 تاریخ عضویت: ۱۴۰۴/۰۳/۱۶`);
-    }
+}
 
-    function showHistory() {
-        if (conversionCount === 0) {
-            showModal('📜 تاریخچه', '📜 هنوز تبدیلی انجام ندادید!');
-            return;
-        }
-        showModal('📜 تاریخچه', 
+function showHistory() {
+    if (conversionCount === 0) {
+        showModal('📜 تاریخچه', '📜 هنوز تبدیلی انجام ندادید!');
+        return;
+    }
+    showModal('📜 تاریخچه', 
 `📌 آخرین تبدیل‌ها:
 
 ${historyLog || 'هنوز تبدیلی انجام ندادید!'}`);
+}
+
+// ==============================================
+// قلب‌ها و ساعت
+// ==============================================
+function dropHearts() {
+    for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'heart-drop';
+            heart.innerHTML = ['💕', '❤️', '💖', '💗', '💜', '✨'][Math.floor(Math.random() * 6)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = Math.random() * 2.5 + 2 + 's';
+            heart.style.fontSize = Math.random() * 18 + 12 + 'px';
+            heart.style.opacity = Math.random() * 0.5 + 0.3;
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }, i * 60);
     }
+}
 
-    let historyLog = '';
-
-    function dropHearts() {
-        for (let i = 0; i < 10; i++) {
-            setTimeout(() => {
-                const heart = document.createElement('div');
-                heart.className = 'heart-drop';
-                heart.innerHTML = ['💕', '❤️', '💖', '💗', '💜', '✨'][Math.floor(Math.random() * 6)];
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDuration = Math.random() * 2.5 + 2 + 's';
-                heart.style.fontSize = Math.random() * 18 + 12 + 'px';
-                heart.style.opacity = Math.random() * 0.5 + 0.3;
-                document.body.appendChild(heart);
-                setTimeout(() => heart.remove(), 4000);
-            }, i * 60);
+function startClock() {
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clock').innerText = `${hours}:${minutes}:${seconds}`;
+        
+        if (hours === minutes && minutes !== '00' && seconds === '00') {
+            dropHearts();
         }
     }
+    updateClock();
+    setInterval(updateClock, 1000);
+}
+startClock();
 
-    function p2e(str) {
-        const map = { '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9' };
-        return str.replace(/[۰-۹]/g, m => map[m]);
+// ==============================================
+// رویدادها
+// ==============================================
+const inputBox = document.getElementById('inputBox');
+const outputDiv = document.getElementById('outputText');
+const resultBox = document.getElementById('resultBox');
+let lastValue = '';
+let lastResult = '';
+let debounceTimer;
+
+function vibrate() {
+    if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(60);
     }
+}
 
-    function startClock() {
-        function updateClock() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            document.getElementById('clock').innerText = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-            
-            if (hours === minutes && minutes !== 0 && seconds === 0) {
-                dropHearts();
-            }
-        }
-        updateClock();
-        setInterval(updateClock, 1000);
-    }
-    startClock();
+function showErrorToast(msg) {
+    let old = document.querySelector('.toast');
+    if (old) old.remove();
+    let toast = document.createElement('div');
+    toast.className = 'toast toast-error';
+    toast.innerHTML = `❌ ${msg} ❌`;
+    document.body.appendChild(toast);
+    vibrate();
+    inputBox.classList.add('shake');
+    setTimeout(() => inputBox.classList.remove('shake'), 300);
+    setTimeout(() => toast.remove(), 2500);
+}
 
-    // ==============================================
-    // دیکشنری اصلی
-    // ==============================================
-    const letterToNum = {
-        'ا':1,'آ':1,'ب':2,'پ':3,'ت':4,'ث':5,'ج':6,'چ':7,
-        'ح':8,'خ':9,'د':10,'ذ':11,'ر':12,'ز':13,'ژ':14,
-        'س':15,'ش':16,'ص':17,'ض':18,'ط':19,'ظ':20,
-        'ع':21,'غ':22,'ف':23,'ق':24,'ک':25,'گ':26,
-        'ل':27,'م':28,'ن':29,'و':30,'ه':31,'ی':32
-    };
+function showSuccessToast(msg) {
+    let old = document.querySelector('.toast');
+    if (old) old.remove();
+    let toast = document.createElement('div');
+    toast.className = 'toast toast-success';
+    toast.innerHTML = `✅ ${msg} ✅`;
+    document.body.appendChild(toast);
+    vibrate();
+    setTimeout(() => toast.remove(), 2500);
+}
+
+function update() {
+    let rawText = inputBox.value;
     
-    const numToLetter = {};
-    for (let key in letterToNum) {
-        let num = letterToNum[key];
-        if (num === 1) {
-            numToLetter[num] = 'ا';
-        } else if (!numToLetter[num]) {
-            numToLetter[num] = key;
-        }
-    }
-
-    const numberToGreek = {
-        '0': 'ο', '1': 'α', '2': 'β', '3': 'γ', '4': 'δ',
-        '5': 'ε', '6': 'ϛ', '7': 'ζ', '8': 'η', '9': 'θ', '10': 'ι'
-    };
-
-    const greekToNum = {
-        'ο': '0', 'α': '1', 'β': '2', 'γ': '3', 'δ': '4',
-        'ε': '5', 'ϛ': '6', 'ζ': '7', 'η': '8', 'θ': '9', 'ι': '10'
-    };
-
-    function isEnglishLetter(char) {
-        return /[a-zA-Z]/.test(char);
-    }
-
-    function vibrate() {
-        if (window.navigator && window.navigator.vibrate) {
-            window.navigator.vibrate(60);
-        }
-    }
-
-    function showErrorToast(msg) {
-        let old = document.querySelector('.toast');
-        if (old) old.remove();
-        
-        let toast = document.createElement('div');
-        toast.className = 'toast toast-error';
-        toast.innerHTML = `❌ ${msg} ❌`;
-        document.body.appendChild(toast);
-        
-        vibrate();
-        
-        const inputBox = document.getElementById('inputBox');
-        inputBox.classList.add('shake');
-        setTimeout(() => inputBox.classList.remove('shake'), 300);
-        
-        setTimeout(() => toast.remove(), 2500);
-    }
-
-    function showSuccessToast(msg) {
-        let old = document.querySelector('.toast');
-        if (old) old.remove();
-        
-        let toast = document.createElement('div');
-        toast.className = 'toast toast-success';
-        toast.innerHTML = `✅ ${msg} ✅`;
-        document.body.appendChild(toast);
-        
-        vibrate();
-        
-        setTimeout(() => toast.remove(), 2500);
-    }
-
-    // ==============================================
-    // توابع تبدیل (اصلاح شده نهایی)
-    // ==============================================
-    function textToCode(line) {
-        let result = '';
-        let currentWordCodes = [];
-        let hasPersian = false;
-        let greekBuffer = [];
-        let inGreek = false;
-        
-        for (let i = 0; i < line.length; i++) {
-            let ch = line[i];
-            
-            if (letterToNum[ch]) {
-                hasPersian = true;
-                if (inGreek) {
-                    greekBuffer.push(letterToNum[ch]);
-                } else {
-                    currentWordCodes.push(letterToNum[ch]);
-                }
-            } 
-            else if (ch === ' ') {
-                // اگه بافر یونانی داشتیم و به فاصله رسیدیم
-                if (greekBuffer.length > 0) {
-                    if (result.length > 0 && !result.endsWith(' ')) {
-                        result += '•';
-                    }
-                    result += '|' + greekBuffer.join('_') + '|';
-                    greekBuffer = [];
-                    inGreek = false;
-                }
-                if (currentWordCodes.length > 0) {
-                    if (result.length > 0 && !result.endsWith(' ')) {
-                        result += '•';
-                    }
-                    result += currentWordCodes.join('_');
-                    currentWordCodes = [];
-                }
-            }
-            else if (isEnglishLetter(ch)) {
-                showErrorToast('فقط حروف فارسی مجاز است');
-                return null;
-            }
-            else if (/[0-9]/.test(ch)) {
-                if (hasPersian) {
-                    if (!inGreek) {
-                        inGreek = true;
-                        greekBuffer = [];
-                    }
-                    greekBuffer.push(numberToGreek[ch] || ch);
-                } else {
-                    currentWordCodes.push(ch);
-                }
-            }
-            else if (/[۰-۹]/.test(ch)) {
-                let engNum = p2e(ch);
-                if (hasPersian) {
-                    if (!inGreek) {
-                        inGreek = true;
-                        greekBuffer = [];
-                    }
-                    greekBuffer.push(numberToGreek[engNum] || engNum);
-                } else {
-                    currentWordCodes.push(engNum);
-                }
-            }
-            else {
-                // کاراکتر غیر عدد و غیر فاصله
-                if (greekBuffer.length > 0) {
-                    if (result.length > 0 && !result.endsWith(' ')) {
-                        result += '•';
-                    }
-                    result += '|' + greekBuffer.join('_') + '|';
-                    greekBuffer = [];
-                    inGreek = false;
-                }
-                
-                if (currentWordCodes.length > 0) {
-                    if (result.length > 0 && !result.endsWith(' ')) {
-                        result += '•';
-                    }
-                    result += currentWordCodes.join('_');
-                    currentWordCodes = [];
-                }
-                result += ch;
-            }
-        }
-        
-        if (greekBuffer.length > 0) {
-            if (result.length > 0 && !result.endsWith(' ')) {
-                result += '•';
-            }
-            result += '|' + greekBuffer.join('_') + '|';
-            greekBuffer = [];
-            inGreek = false;
-        }
-        
-        if (currentWordCodes.length > 0) {
-            if (result.length > 0 && !result.endsWith(' ')) {
-                result += '•';
-            }
-            result += currentWordCodes.join('_');
-            currentWordCodes = [];
-        }
-        
-        result = result.replace(/ /g, '');
-        
-        return result;
-    }
-
-    function codeToText(line) {
-        let engVersion = p2e(line);
-        
-        if (/^\d+$/.test(engVersion)) {
-            let num = parseInt(engVersion);
-            if (num >= 1 && num <= 32 && numToLetter[engVersion]) {
-                return numToLetter[engVersion];
-            }
-            return engVersion;
-        }
-        
-        let parts = engVersion.split('•');
-        let result = [];
-        
-        for (let part of parts) {
-            if (part.trim() === '') continue;
-            
-            let word = '';
-            
-            if (part.includes('|')) {
-                let subParts = part.split('|');
-                for (let sub of subParts) {
-                    if (sub.trim() === '') continue;
-                    
-                    if (sub.includes('_')) {
-                        let tokens = sub.split('_');
-                        for (let token of tokens) {
-                            if (greekToNum[token] !== undefined) {
-                                word += greekToNum[token];
-                            } else {
-                                word += token;
-                            }
-                        }
-                    } else {
-                        if (greekToNum[sub] !== undefined) {
-                            word += greekToNum[sub];
-                        } else {
-                            let num = parseInt(sub);
-                            if (num >= 1 && num <= 32 && numToLetter[sub]) {
-                                word += numToLetter[sub];
-                            } else if (!isNaN(num)) {
-                                word += num;
-                            } else {
-                                word += sub;
-                            }
-                        }
-                    }
-                }
-            } else {
-                let numbers = part.split('_');
-                for (let n of numbers) {
-                    let num = parseInt(n);
-                    if (num >= 1 && num <= 32 && numToLetter[n]) {
-                        word += numToLetter[n];
-                    } else if (!isNaN(num)) {
-                        word += num;
-                    } else {
-                        word += n;
-                    }
-                }
-            }
-            
-            result.push(word);
-        }
-        
-        return result.join(' ');
-    }
-
-    function convertLine(line) {
-        if (line.trim() === '') return line;
-        
-        let trimmed = line.trim();
-        let engVersion = p2e(trimmed);
-        
-        if (/[a-zA-Z]/.test(line)) {
-            showErrorToast('فقط حروف فارسی مجاز است');
-            return null;
-        }
-        
-        if (/^[0-9_•|]+$/.test(engVersion) || /[•]/.test(engVersion) || /[_]/.test(engVersion) || /[|]/.test(engVersion)) {
-            return codeToText(line);
-        }
-        
-        if (/^\d+$/.test(engVersion)) {
-            let num = parseInt(engVersion);
-            if (num >= 1 && num <= 32 && numToLetter[engVersion]) {
-                return numToLetter[engVersion];
-            }
-            return engVersion;
-        }
-        
-        return textToCode(line);
-    }
-
-    function convertFullText(input) {
-        let lines = input.split(/\r?\n/);
-        let convertedLines = [];
-        let hasError = false;
-        
-        for (let line of lines) {
-            let result = convertLine(line);
-            if (result === null) {
-                hasError = true;
-                convertedLines.push(line);
-            } else {
-                convertedLines.push(result);
-            }
-        }
-        
-        if (hasError) {
-            return null;
-        }
-        return convertedLines.join('\n');
-    }
-
-    // ==============================================
-    // رویدادها
-    // ==============================================
-    const inputBox = document.getElementById('inputBox');
-    const outputDiv = document.getElementById('outputText');
-    const resultBox = document.getElementById('resultBox');
-    let lastValue = '';
-    let lastResult = '';
-
-    function update() {
-        let rawText = inputBox.value;
-        
-        if (/[a-zA-Z]/.test(rawText) && !/[a-zA-Z]/.test(lastValue)) {
-            showErrorToast('فقط حروف فارسی مجاز است');
-            let newText = rawText.replace(/[a-zA-Z]/g, '');
-            inputBox.value = newText;
-            rawText = newText;
-            inputBox.blur();
-        }
-        
-        lastValue = inputBox.value;
-        
-        if (rawText === '') {
-            outputDiv.innerText = '—';
-            outputDiv.setAttribute('data-error', 'false');
-            return;
-        }
-        
-        let result = convertFullText(rawText);
-        if (result === null) {
-            outputDiv.innerText = '—';
-            outputDiv.setAttribute('data-error', 'true');
-            return;
-        }
-        
-        if (result !== lastResult && result !== '—' && !result.includes('❌')) {
-            conversionCount++;
-            let short = result.length > 30 ? result.slice(0, 30) + '...' : result;
-            historyLog = `${conversionCount}. ${short}\n` + (historyLog || '').split('\n').slice(0, 4).join('\n');
-            lastResult = result;
-        }
-        
-        outputDiv.innerText = result;
-        outputDiv.setAttribute('dir', 'ltr');
-        
-        if (result.includes('❌')) {
-            outputDiv.setAttribute('data-error', 'true');
-        } else {
-            outputDiv.setAttribute('data-error', 'false');
-        }
-    }
-    
-    inputBox.addEventListener('input', update);
-
-    resultBox.addEventListener('click', async (e) => {
-        e.stopPropagation();
-        let txt = outputDiv.innerText;
-        let isErr = outputDiv.getAttribute('data-error') === 'true';
-        
-        if (!txt || txt === '—' || isErr || txt.includes('❌')) {
-            showErrorToast('چیزی برای کپی نیست');
-            return;
-        }
-        
+    if (/[a-zA-Z]/.test(rawText) && !/[a-zA-Z]/.test(lastValue)) {
+        showErrorToast('فقط حروف فارسی مجاز است');
+        let newText = rawText.replace(/[a-zA-Z]/g, '');
+        inputBox.value = newText;
+        rawText = newText;
         inputBox.blur();
-        
-        setTimeout(async () => {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                try {
-                    await navigator.clipboard.writeText(txt);
-                    showSuccessToast('کپی شد');
-                    resultBox.style.transform = 'scale(0.97)';
-                    setTimeout(() => resultBox.style.transform = '', 150);
-                    return;
-                } catch (err) {}
-            }
-            try {
-                const textarea = document.createElement('textarea');
-                textarea.value = txt;
-                textarea.style.position = 'fixed';
-                textarea.style.top = '-9999px';
-                document.body.appendChild(textarea);
-                textarea.select();
-                const success = document.execCommand('copy');
-                document.body.removeChild(textarea);
-                if (success) {
-                    showSuccessToast('کپی شد');
-                    resultBox.style.transform = 'scale(0.97)';
-                    setTimeout(() => resultBox.style.transform = '', 150);
-                } else {
-                    showErrorToast('کپی نشد');
-                }
-            } catch (err) {
-                showErrorToast('کپی نشد');
-            }
-        }, 50);
-    });
-
-    inputBox.value = '';
-    update();
-    
-    function autoResizeTextarea() {
-        inputBox.style.height = 'auto';
-        let newHeight = Math.min(inputBox.scrollHeight, 180);
-        inputBox.style.height = newHeight + 'px';
     }
-    inputBox.addEventListener('input', autoResizeTextarea);
-    autoResizeTextarea();
+    
+    lastValue = inputBox.value;
+    
+    if (rawText === '') {
+        outputDiv.innerText = '—';
+        outputDiv.setAttribute('data-error', 'false');
+        return;
+    }
+    
+    let convType = detectConversionType(rawText);
+    let result;
+    
+    if (convType === 'encode') {
+        result = encode(rawText);
+    } else {
+        result = decode(rawText);
+    }
+    
+    if (result !== lastResult && result !== '—' && !result.includes('❌')) {
+        conversionCount++;
+        let short = result.length > 30 ? result.slice(0, 30) + '...' : result;
+        historyLog = `${conversionCount}. ${short}\n` + (historyLog || '').split('\n').slice(0, 4).join('\n');
+        lastResult = result;
+    }
+    
+    outputDiv.innerText = result;
+    outputDiv.setAttribute('dir', 'ltr');
+    
+    if (result.includes('❌')) {
+        outputDiv.setAttribute('data-error', 'true');
+    } else {
+        outputDiv.setAttribute('data-error', 'false');
+    }
+}
+
+inputBox.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(update, 200);
+});
+
+resultBox.addEventListener('click', async function(e) {
+    e.stopPropagation();
+    let txt = outputDiv.innerText;
+    let isErr = outputDiv.getAttribute('data-error') === 'true';
+    
+    if (!txt || txt === '—' || isErr || txt.includes('❌')) {
+        showErrorToast('چیزی برای کپی نیست');
+        return;
+    }
+    
+    inputBox.blur();
+    
+    try {
+        await navigator.clipboard.writeText(txt);
+        showSuccessToast('کپی شد');
+        resultBox.style.transform = 'scale(0.97)';
+        setTimeout(() => resultBox.style.transform = '', 150);
+    } catch (err) {
+        try {
+            const textarea = document.createElement('textarea');
+            textarea.value = txt;
+            textarea.style.position = 'fixed';
+            textarea.style.top = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showSuccessToast('کپی شد');
+            resultBox.style.transform = 'scale(0.97)';
+            setTimeout(() => resultBox.style.transform = '', 150);
+        } catch (err2) {
+            showErrorToast('کپی نشد');
+        }
+    }
+});
+
+inputBox.value = '';
+update();
+
+function autoResizeTextarea() {
+    inputBox.style.height = 'auto';
+    let newHeight = Math.min(inputBox.scrollHeight, 180);
+    inputBox.style.height = newHeight + 'px';
+}
+inputBox.addEventListener('input', autoResizeTextarea);
+autoResizeTextarea();
 </script>
 </body>
 </html>
