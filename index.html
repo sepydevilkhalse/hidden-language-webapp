@@ -352,7 +352,6 @@
             50% { background: rgba(30, 27, 46, 0.5); border-color: rgba(139, 92, 246, 0.12); }
         }
 
-        /* ===== دکمه پاکسازی ===== */
         .btn-clear-wrapper {
             margin-top: 12px;
             display: flex;
@@ -569,10 +568,10 @@
             background: rgba(139, 92, 246, 0.08);
         }
 
-        /* ===== نوارهای اطلاع‌رسانی یکدست ===== */
+        /* ===== نوارهای اطلاع‌رسانی از بالا ===== */
         .toast-container {
             position: fixed;
-            bottom: 30px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
@@ -600,13 +599,13 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             font-family: 'Noto Nastaliq Urdu', -apple-system, 'Apple Color Emoji', sans-serif;
             pointer-events: auto;
-            transform: translateY(0) scale(1);
+            transform: translateY(-20px) scale(0.92);
             opacity: 0;
             visibility: hidden;
             transition: 
-                transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-                visibility 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+                transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0.3s cubic-bezier(0.22, 1, 0.36, 1);
             will-change: transform, opacity;
         }
         .toast.show {
@@ -617,7 +616,7 @@
         .toast.hide {
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-10px) scale(0.96);
+            transform: translateY(-20px) scale(0.92);
         }
 
         .toast-success {
@@ -675,6 +674,9 @@
                 padding: 10px 16px;
                 font-size: 0.75rem;
             }
+            .toast-container {
+                top: 12px;
+            }
         }
     </style>
 </head>
@@ -692,7 +694,7 @@
     </div>
 </div>
 
-<!-- ===== نوارهای اطلاع‌رسانی ===== -->
+<!-- ===== نوارهای اطلاع‌رسانی از بالا ===== -->
 <div class="toast-container" id="toastContainer"></div>
 
 <div class="container">
@@ -708,7 +710,7 @@
 
         <div class="input-area">
             <label>📝 بنویس... (فقط حروف فارسی)</label>
-            <textarea id="inputBox" rows="3" placeholder="مثال:&#10;سلام خوبی 🥺&#10;یا&#10;15_27_1_28•9_30_2_32"></textarea>
+            <textarea id="inputBox" rows="3" placeholder="مثال:&#10;سلام خوبی&#10;یا&#10;15_27_1_28•9_30_2_32"></textarea>
         </div>
 
         <div class="result-area glass-card" id="resultBox" style="padding: 12px 16px; margin: 0;">
@@ -719,7 +721,6 @@
             <div class="copy-hint">👇 برای کپی، روی نتیجه ضربه بزنید 👇</div>
         </div>
 
-        <!-- ===== دکمه پاکسازی ===== -->
         <div class="btn-clear-wrapper">
             <button class="btn-clear" onclick="clearAll()">
                 <span>✕</span> پاکسازی
@@ -989,7 +990,7 @@ function encode(text) {
         return htmlEscape(resultLines.join('\n'));
     } catch (e) {
         console.error('Encode error:', e);
-        return '❌ خطا در تبدیل';
+        return '';
     }
 }
 
@@ -1001,7 +1002,7 @@ function decode(text) {
         text = cleanText(text);
         let errors = validateCode(text);
         if (errors.length > 0) {
-            return htmlEscape(errors.slice(0, 3).join('\n'));
+            return '';
         }
         let lines = text.split('\n');
         let finalLines = [];
@@ -1026,7 +1027,7 @@ function decode(text) {
                             if (greekToNum[gt] !== undefined) {
                                 currentWord += greekToNum[gt];
                             } else {
-                                return htmlEscape(`❌ کاراکتر نامعتبر در |: ${gt}`);
+                                return '';
                             }
                         }
                         bracketContent = '';
@@ -1043,7 +1044,7 @@ function decode(text) {
                 if (tokenType === 'NUMBER') {
                     let num = parseInt(tokenValue);
                     if (num > 32) {
-                        return htmlEscape(`❌ عدد ${num} معتبر نیست (بزرگتر از ۳۲)`);
+                        return '';
                     }
                     if (numToLetter[tokenValue]) {
                         currentWord += numToLetter[tokenValue];
@@ -1081,7 +1082,7 @@ function decode(text) {
         return htmlEscape(finalLines.join('\n'));
     } catch (e) {
         console.error('Decode error:', e);
-        return '❌ خطا در تبدیل';
+        return '';
     }
 }
 
@@ -1199,12 +1200,9 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ==============================================
-// ===== نوارهای اطلاع‌رسانی (Toast) =====
+// ===== نوارهای اطلاع‌رسانی از بالا =====
 // ==============================================
-let toastQueue = [];
-let isToastShowing = false;
 let toastTimeout = null;
-let toastHideTimeout = null;
 
 function showToast(message, type = 'success') {
     const container = document.getElementById('toastContainer');
@@ -1218,7 +1216,7 @@ function showToast(message, type = 'success') {
                 existingToast.remove();
             }
             createAndShowToast(message, type);
-        }, 250);
+        }, 300);
     } else {
         createAndShowToast(message, type);
     }
@@ -1253,7 +1251,7 @@ function createAndShowToast(message, type) {
                 toast.remove();
             }
             toastTimeout = null;
-        }, 250);
+        }, 300);
     }, 2500);
 }
 
@@ -1263,6 +1261,14 @@ function createAndShowToast(message, type) {
 function clearAll() {
     const inputBox = document.getElementById('inputBox');
     const outputDiv = document.getElementById('outputText');
+    
+    const hasInput = inputBox.value.trim() !== '';
+    const hasOutput = outputDiv.innerText !== '—' && outputDiv.innerText.trim() !== '';
+    
+    if (!hasInput && !hasOutput) {
+        showToast('❌ چیزی برای پاکسازی نیست', 'error');
+        return;
+    }
     
     inputBox.value = '';
     outputDiv.innerText = '—';
@@ -1388,21 +1394,26 @@ function update() {
         result = decode(rawText);
     }
     
-    if (result !== lastResult && result !== '—' && !result.includes('❌')) {
+    if (result !== lastResult && result !== '—' && result !== '' && !result.includes('❌')) {
         conversionCount++;
         let short = result.length > 30 ? result.slice(0, 30) + '...' : result;
         historyLog = `${conversionCount}. ${short}\n` + (historyLog || '').split('\n').slice(0, 4).join('\n');
         lastResult = result;
     }
     
+    if (result === '' || result.includes('❌')) {
+        outputDiv.innerText = '—';
+        outputDiv.setAttribute('data-error', 'true');
+        outputDiv.setAttribute('dir', 'rtl');
+        // نمایش خطا فقط در نوار
+        const errorMsg = result.includes('❌') ? result.replace(/❌/g, '').trim() : 'خطا در تبدیل';
+        showToast(`❌ ${errorMsg}`, 'error');
+        return;
+    }
+    
     outputDiv.innerText = result;
     outputDiv.setAttribute('dir', 'ltr');
-    outputDiv.setAttribute('data-error', result.includes('❌') ? 'true' : 'false');
-    
-    // اگر خطا داشت، نمایش با نوار
-    if (result.includes('❌')) {
-        showToast(result.replace(/❌/g, '').trim(), 'error');
-    }
+    outputDiv.setAttribute('data-error', 'false');
 }
 
 inputBox.addEventListener('input', function() {
@@ -1415,8 +1426,8 @@ resultBox.addEventListener('click', async function(e) {
     let txt = outputDiv.innerText;
     let isErr = outputDiv.getAttribute('data-error') === 'true';
     
-    if (!txt || txt === '—' || isErr || txt.includes('❌')) {
-        showToast('⚠️ چیزی برای کپی نیست', 'error');
+    if (!txt || txt === '—' || isErr || txt.includes('❌') || txt === '') {
+        showToast('❌ چیزی برای کپی نیست', 'error');
         vibrate();
         return;
     }
